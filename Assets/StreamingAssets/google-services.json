@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260279781485",
+    "project_id": "unityui-33b85",
+    "storage_bucket": "unityui-33b85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260279781485:android:cd639effc965d59b6c1764",
+        "android_client_info": {
+          "package_name": "com.Movemate.moveMate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYHQlo_LO5FF5z7ChFu7BrZUfC9gbQd-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

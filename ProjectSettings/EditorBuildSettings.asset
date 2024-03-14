@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 3fc8acdd13e6c734bafef6554d6fdbcd
+  - enabled: 1
+    path: Assets/Scenes/appDev/signup.unity
+    guid: dfb4b1ad2a0cd4151b587059380a0c56
+  - enabled: 1
+    path: Assets/Scenes/appDev/Login.unity
+    guid: 416832fd7cbf44c669366617bab07cd2
+  - enabled: 1
+    path: Assets/Scenes/appDev/homepage.unity
+    guid: 03553a521389e43c6a961d7fd5e366b4
+  - enabled: 1
+    path: Assets/Scenes/appDev/morepage.unity
+    guid: 736cad12b311044de86e9da5a7bd9705
+  - enabled: 1
+    path: Assets/Scenes/appDev/gameIntro.unity
+    guid: 200864fdac5ae452d9413b164a6fb0d0
+  - enabled: 1
+    path: Assets/Scenes/appDev/gamePage.unity
+    guid: bc52f494fdb144faa9b1626276f87b24
+  - enabled: 0
+    path: Assets/Scenes/appDev/boxGameIntro.unity
+    guid: 5f78478fc54902b42a8765235d22d29f
+  - enabled: 1
+    path: Assets/MediaPipeUnity/Samples/Scenes/Hand Tracking/flappybirdgame.unity
+    guid: 08035b20d3836a599ad2fd3d81e41ee5
+  m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 1b1aea6efde015e438c0ee6aac1cb84a, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 5423f2d1fa1b348bb8bc8a051bbf7cce, type: 2}
