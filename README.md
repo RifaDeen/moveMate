@@ -1,2 +1,1 @@
-# moveMate
-Gamified mobile application tailored for brain stroke rehabilitation.
+🚀🚀🚀 We are a dynamic team comprising five second-year Computer Science undergraduates from IIT affiliated with the University of Westminster. Our mission is to develop an innovative gamified mobile app tailored for brain stroke rehabilitation. Our primary objective is to enhance upper limb functionality while fostering patient motivation through engaging gameplay. 🚀🚀🚀
