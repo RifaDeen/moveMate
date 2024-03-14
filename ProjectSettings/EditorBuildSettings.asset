@@ -29,7 +29,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/appDev/boxGameIntro.unity
     guid: 5f78478fc54902b42a8765235d22d29f
-  - enabled: 1
+  - enabled: 0
     path: Assets/MediaPipeUnity/Samples/Scenes/Hand Tracking/flappybirdgame.unity
     guid: 08035b20d3836a599ad2fd3d81e41ee5
   m_configObjects:
