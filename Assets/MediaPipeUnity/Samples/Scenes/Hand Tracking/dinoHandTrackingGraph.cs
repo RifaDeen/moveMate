@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Mediapipe.Unity.Sample.HandTracking
 {
-  public readonly struct fbHandTrackingResult
+  public readonly struct dinoHandTrackingResult
   {
     public readonly List<Detection> palmDetections;
     public readonly List<NormalizedRect> handRectsFromPalmDetections;
@@ -23,7 +23,7 @@ namespace Mediapipe.Unity.Sample.HandTracking
     public readonly List<NormalizedRect> handRectsFromLandmarks;
     public readonly List<ClassificationList> handedness;
 
-    public fbHandTrackingResult(List<Detection> palmDetections, List<NormalizedRect> handRectsFromPalmDetections,
+    public dinoHandTrackingResult(List<Detection> palmDetections, List<NormalizedRect> handRectsFromPalmDetections,
       List<NormalizedLandmarkList> handLandmarks, List<LandmarkList> handWorldLandmarks,
       List<NormalizedRect> handRectsFromLandmarks, List<ClassificationList> handedness)
     {
@@ -36,7 +36,7 @@ namespace Mediapipe.Unity.Sample.HandTracking
     }
   }
 
-  public class FBHandTrackingGraph : GraphRunner
+  public class dinoHandTrackingGraph : GraphRunner
   {
     public enum ModelComplexity
     {
@@ -148,7 +148,7 @@ namespace Mediapipe.Unity.Sample.HandTracking
       AddTextureFrameToInputStream(_InputStreamName, textureFrame);
     }
 
-    public async Task<fbHandTrackingResult> WaitNext()
+    public async Task<dinoHandTrackingResult> WaitNext()
     {
       var results = await WhenAll(
         _palmDetectionsStream.WaitNextAsync(),
@@ -185,7 +185,7 @@ namespace Mediapipe.Unity.Sample.HandTracking
         return packet.Get(ClassificationList.Parser);
       });
 
-      return new fbHandTrackingResult(palmDetections, handRectsFromPalmDetections, handLandmarks, handWorldLandmarks, handRectsFromLandmarks, handedness);
+      return new dinoHandTrackingResult(palmDetections, handRectsFromPalmDetections, handLandmarks, handWorldLandmarks, handRectsFromLandmarks, handedness);
     }
 
     protected override IList<WaitForResult> RequestDependentAssets()
