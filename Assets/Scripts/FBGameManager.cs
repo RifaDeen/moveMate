@@ -49,7 +49,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(true);
          gameOverImage.SetActive(false);
 
-         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
         var dependencyStatus = task.Result;
         if (dependencyStatus == Firebase.DependencyStatus.Available) {
         // Create and hold a reference to your FirebaseApp,
@@ -121,10 +121,12 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "Ahamad";   
+        userID = "test_user";
+
         gameID = "flappy_bird";
-        gameInstanceId = GenerateGameInstanceId();
-        SaveGameDataToFirestore(userID, gameID, gameInstanceId, score);
+        GameUtils gameUtils = new GameUtils();
+        gameInstanceId = gameUtils.GenerateGameInstanceId();
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, score);
 
     }
 
@@ -140,43 +142,4 @@ public class FBGameManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-      private string GenerateGameInstanceId()
-    {
-        long timestamp = System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        System.Random random = new System.Random();
-        int randomComponent = random.Next(10000);
-        string gameInstanceId = $"{timestamp}-{randomComponent}";
-        return gameInstanceId;
-    }
-
-    private void SaveGameDataToFirestore(string userId, string gameId, string gameInstanceId, int score)
-    {
-        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-
-        DocumentReference gameHistoryRef = db.Collection("users").Document(userId)
-            .Collection("game_history").Document(gameId).Collection("game_instances").Document(gameInstanceId);
-
-        Dictionary<string, object> gameData = new Dictionary<string, object>
-        {
-            { "score", score },
-          //  { "time", },
-            { "date", DateTime.UtcNow } // Store the current date
-        };
-
-        gameHistoryRef.SetAsync(gameData).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Failed to write game data to Firestore: " + task.Exception);
-            }
-            else if (task.IsCanceled)
-            {
-                Debug.LogError("Firestore write operation was cancelled");
-            }
-            else
-            {
-                Debug.Log("Game data successfully written to Firestore");
-            }
-        });
-    }
 }

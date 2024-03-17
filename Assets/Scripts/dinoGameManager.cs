@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
+using Firebase.Extensions;
+using Firebase.Firestore;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 [DefaultExecutionOrder(-1)]
 public class dinoGameManager : MonoBehaviour
@@ -26,6 +31,13 @@ public class dinoGameManager : MonoBehaviour
     private bool isGameActive = false;
     private float score;
     public float Score => score;
+
+    private User user;
+    private Firebase.FirebaseApp app;
+    private string userID;
+
+    private string gameID;
+    private string gameInstanceId;
 
     private void Awake()
     {
@@ -56,6 +68,22 @@ public class dinoGameManager : MonoBehaviour
 
         // Stop the timer when the game is over
         dinoTimerManager.Instance.StopTimer();
+
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        var dependencyStatus = task.Result;
+        if (dependencyStatus == Firebase.DependencyStatus.Available) {
+        // Create and hold a reference to your FirebaseApp,
+        // where app is a Firebase.FirebaseApp property of your application class.
+            app = Firebase.FirebaseApp.DefaultInstance;
+            Debug.Log("Firebase is ready to use!");
+
+        // Set a flag here to indicate whether Firebase is ready to use by your app.
+        } else {
+             UnityEngine.Debug.LogError(System.String.Format(
+             "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+            // Firebase Unity SDK is not safe to use here.
+        }
+    });
     }
 
     public void NewGame()
@@ -104,6 +132,23 @@ public class dinoGameManager : MonoBehaviour
 
         // Disable player control
         isGameActive = false;
+
+        // if (user != null)
+        // {
+        //     userID = user.UserId;
+        // }
+        // else
+        // {
+        //     Debug.LogError("User object is null");
+        // }
+
+        userID = "test_user";
+
+        gameID = "dino_game";
+        GameUtils gameUtils = new GameUtils();
+        gameInstanceId = gameUtils.GenerateGameInstanceId();
+        int scoreInt = (int)score; // Cast the score from float to int
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt);
     }
 
     public void Retry()
