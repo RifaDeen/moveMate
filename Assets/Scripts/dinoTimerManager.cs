@@ -44,4 +44,9 @@ public class dinoTimerManager : MonoBehaviour
     {
         isTimerRunning = false;  // Stop the timer
     }
+
+    public float GetElapsedTime()
+    {
+        return elapsedTime;
+    }
 }

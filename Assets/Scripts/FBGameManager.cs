@@ -121,12 +121,16 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "test_user";
+        userID = "time_check";
 
         gameID = "flappy_bird";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
-        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, score);
+
+         // Get game time from FBTimerManager
+        float gameTime = FBTimerManager.Instance.GetElapsedTime();
+
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, score, (float)Math.Round(gameTime,2));
 
     }
 

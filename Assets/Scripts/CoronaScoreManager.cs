@@ -69,7 +69,7 @@ public class CoronaScoreManager : MonoBehaviour
         gameID = "corona_game";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
-        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, (int)score);
+      //  gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, (int)score);
 
     }
 }
