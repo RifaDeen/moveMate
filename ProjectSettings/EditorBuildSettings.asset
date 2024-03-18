@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/appDev/morepage.unity
     guid: 736cad12b311044de86e9da5a7bd9705
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/appDev/gameIntro.unity
     guid: 200864fdac5ae452d9413b164a6fb0d0
   - enabled: 1
