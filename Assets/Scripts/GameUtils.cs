@@ -15,7 +15,7 @@ public class GameUtils
         return gameInstanceId;
     }
 
-    public void SaveGameDataToFirestore(string userId, string gameId, string gameInstanceId, int score)
+    public void SaveGameDataToFirestore(string userId, string gameId, string gameInstanceId, int score, float time)
     {
         FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
@@ -25,7 +25,7 @@ public class GameUtils
         Dictionary<string, object> gameData = new Dictionary<string, object>
         {
             { "score", score },
-           // {"Time, "}
+            {"Time", time},
             { "date", DateTime.UtcNow } // Store the current date
         };
 

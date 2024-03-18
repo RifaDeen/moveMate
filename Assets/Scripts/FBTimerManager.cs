@@ -33,4 +33,11 @@ public class FBTimerManager : MonoBehaviour
     {
         elapsedTime = 0f;
     }
+
+    public float GetElapsedTime()
+    {
+        return elapsedTime;
+    }
+
+
 }
