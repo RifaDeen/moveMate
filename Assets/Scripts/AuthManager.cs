@@ -370,7 +370,11 @@ public class AuthManager : MonoBehaviour
 
 
 
-
+if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
+{
+    logText.text = "Fields are empty";
+    return;
+}else{
         FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled)
@@ -385,15 +389,45 @@ public class AuthManager : MonoBehaviour
                 {
 
                     FirebaseException firebaseEx = exception as FirebaseException;
-                    if (firebaseEx != null)
-                    {
-                        Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                        logText.text = firebaseEx.Message;
-                        ClearFields(); // Clear the input fields
-                    }
+                   if (firebaseEx != null)
+                //     {
+                //         Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+                //         logText.text = firebaseEx.Message;
+                //         ClearFields(); // Clear the input fields
+                //     }
+                // }
+                {
+                Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+
+                // Here you can handle the specific error based on the error code
+                // For example:
+                switch (firebaseEx.ErrorCode)
+                {
+                    case (int)Firebase.Auth.AuthError.MissingEmail:
+                        logText.text = "Missing email";
+                        break;
+                    case (int)Firebase.Auth.AuthError.MissingPassword:
+                        logText.text = "Missing password";
+                        break;
+                    case (int)Firebase.Auth.AuthError.WrongPassword:
+                        logText.text = "Wrong password";
+                        break;
+                    case (int)Firebase.Auth.AuthError.InvalidEmail:
+                        logText.text = "Invalid email";
+                        break;
+                    case (int)Firebase.Auth.AuthError.UserNotFound:
+                        logText.text = "User not found";
+                        break;
+                    // Add more cases as needed
                 }
+
+                ClearFields(); // Clear the input fields
+            }
+        }
+            
                 return;
             }
+        
 
             Debug.Log("Login successful");
             // Firebase user has been created.
@@ -407,6 +441,7 @@ public class AuthManager : MonoBehaviour
 
             UnityEngine.SceneManagement.SceneManager.LoadScene("HomePage");
         });
+    }
     }
 
     
