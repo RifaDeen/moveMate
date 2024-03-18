@@ -136,26 +136,48 @@ public class AuthManager : MonoBehaviour
     
 
 
-    public void OnClickLogin()
-    {
-        Debug.LogError("Email and/or password is empty.");
-        logText.text = "Email and/or password is empty.";
-        return;
-    }
-    else
-    {
-        Debug.Log("Email and password are filled");
-    }
-
-
-
-if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
-{
-    logText.text = "Fields are empty";
-    return;
-}else{
-        FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+    public void OnClickLogin(){
+    
+        if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
         {
+            logText.text = "Fields are empty";
+            return;
+        }
+        else
+        {
+            FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("Login faulted");
+                    string mail = email.text;
+
+                    
+                        foreach (var exception in task.Exception.InnerExceptions)
+                        {
+                            FirebaseException firebaseEx = exception as FirebaseException;
+                            if (firebaseEx != null)
+                            {
+                                Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+                                logText.text = firebaseEx.Message;
+                            }
+                        }
+                }
+            });
+        }
+
+        if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
+        {
+            logText.text = "Fields are empty";
+            return;
+        }else{
+            FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+            {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
@@ -166,12 +188,6 @@ if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
                 Debug.Log("Login faulted");
                  string mail = email.text;
         
-                if (!IsValidEmail(mail))
-                {
-                    Debug.LogError("Invalid email format");
-                    logText.text = "Please enter a valid email address";
-                    return;
-                }
                 foreach (var exception in task.Exception.InnerExceptions)
                 {
                     FirebaseException firebaseEx = exception as FirebaseException;
@@ -199,19 +215,7 @@ if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
         }
         });
     }
-     private bool IsValidEmail(string email)
-    {
-        try
-        {
-            var addr = new System.Net.Mail.MailAddress(email);
-            return addr.Address == email;
-        }
-        catch
-        {
-            return false;
-        }
     }
-
     
     void AuthStateChanged(object sender, System.EventArgs eventArgs) {
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;
@@ -231,6 +235,7 @@ if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
         }
     }
      
+
 
 }
 
