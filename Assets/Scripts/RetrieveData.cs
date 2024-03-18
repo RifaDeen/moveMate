@@ -25,15 +25,16 @@ public void RetrieveGameDataFromFirestore(string userId, string gameId)
         foreach (DocumentSnapshot document in task.Result.Documents)
         {
             Dictionary<string, object> gameData = document.ToDictionary();
+            /* checks if the dictionary contains keys "score" and "Time" 
+            If both keys are found, it retrieves their corresponding values 
+            and assigns them to variables score and time respectively */
             if (gameData.TryGetValue("score", out object score) && gameData.TryGetValue("Time", out object time))
             {
-                scores.Add(Convert.ToInt32(score));
+                scores.Add(Convert.ToInt32(score)); //converts to apprpirate data type
                 times.Add(Convert.ToSingle(time));
             }
         }
 
-        // Now you have scores in the 'scores' array and times in the 'times' array
-        // You can use these arrays as needed in your application
     });
 }
 }
