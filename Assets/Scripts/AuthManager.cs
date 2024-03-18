@@ -342,18 +342,34 @@ public class AuthManager : MonoBehaviour
         });
     }
     
+    // public void OnClickLogin()
+    // {
+    //     Debug.Log("Clicked Login");
+    //     if (!loginIsFilled())
+    //     {
+    //         Debug.LogError("Email and/or password is empty.");
+    //         logText.text = "Email and/or password is empty.";
+    //         return;
+    //     }
+    //     else{
+    //         Debug.Log("Email and password are filled");
+    //     }
     public void OnClickLogin()
+{
+    Debug.Log("Clicked Login");
+    if (!loginIsFilled())
     {
-        Debug.Log("Clicked Login");
-        if (!loginIsFilled())
-        {
-            Debug.LogError("Email and/or password is empty.");
-            logText.text = "Email and/or password is empty.";
-            return;
-        }
-        else{
-            Debug.Log("Email and password are filled");
-        }
+        Debug.LogError("Email and/or password is empty.");
+        logText.text = "Email and/or password is empty.";
+        return;
+    }
+    else
+    {
+        Debug.Log("Email and password are filled");
+    }
+
+
+
 
         FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
         {
@@ -412,15 +428,30 @@ public class AuthManager : MonoBehaviour
         }
     }
 
-    private bool signupIsFilled()
-    {
-        return string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text) || string.IsNullOrEmpty(username.text);
-    }
-    private bool loginIsFilled()
-    {
-        return string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text);
-    }
-
+    // private bool signupIsFilled()
+    // {
+    //     return string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text) || string.IsNullOrEmpty(username.text);
+    // }
+//     private bool signupIsFilled()
+// {
+//     return !string.IsNullOrEmpty(email.text) && !string.IsNullOrEmpty(password.text) && !string.IsNullOrEmpty(username.text);
+// }
+private bool signupIsFilled()
+{
+    return !string.IsNullOrEmpty(email.text.Trim()) && !string.IsNullOrEmpty(password.text.Trim()) && !string.IsNullOrEmpty(username.text.Trim());
+}
+    // private bool loginIsFilled()
+    // {
+    //     return string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text);
+    // }
+// private bool loginIsFilled()
+// {
+//     return !string.IsNullOrEmpty(email.text) && !string.IsNullOrEmpty(password.text);
+// }
+private bool loginIsFilled()
+{
+    return !string.IsNullOrEmpty(email.text.Trim()) && !string.IsNullOrEmpty(password.text.Trim());
+}
     private void ClearFields()
     {
         username.text = "";
