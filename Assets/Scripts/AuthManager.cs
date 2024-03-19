@@ -92,7 +92,7 @@ public class AuthManager : MonoBehaviour
                     if (firebaseEx != null)
                     {
                         Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                        logText.text = firebaseEx.Message;
+                        logText.text = "An error occurred, please try again";
                     }
                 } 
             }
@@ -164,7 +164,7 @@ public class AuthManager : MonoBehaviour
                             if (firebaseEx != null)
                             {
                                 Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                                logText.text = firebaseEx.Message;
+                                logText.text = "An error occurred, please try again";
                             }
                         }
                 }
