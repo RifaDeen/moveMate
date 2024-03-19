@@ -131,7 +131,10 @@ public class FBGameManager : MonoBehaviour
         float gameTime = FBTimerManager.Instance.GetElapsedTime();
 
         gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, score, (float)Math.Round(gameTime,2));
-
+        var retrieveData = new RetrieveData();
+        retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
+        //retrieveData.CalculateTotalScore();
+        //retrieveData.PrintGameDataDictionary();
     }
 
     public void Pause()

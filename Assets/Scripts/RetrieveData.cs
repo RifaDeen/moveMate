@@ -2,39 +2,113 @@ using Firebase.Extensions;
 using Firebase.Firestore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-public class RetreiveData {
-public void RetrieveGameDataFromFirestore(string userId, string gameId)
-{
-    FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+public class RetrieveData {
 
-    CollectionReference gameInstancesRef = db.Collection("users").Document(userId)
-        .Collection("game_history").Document(gameId).Collection("game_instances");
+    //stroring dictionary in a dictionary -  { "flappy_bird" : [(score, time)], "dino_game" : [(score, time)]}
+    Dictionary<string, List<(int score, float time)>> gameDataDictionary = new Dictionary<string, List<(int score, float time)>>();
 
-    gameInstancesRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+    public async void RetrieveGameDataFromFirestore(string userId, string gameId)
     {
-        if (task.IsFaulted)
-        {
-            Console.WriteLine("Failed to retrieve game data from Firestore: " + task.Exception);
-            return;
-        }
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
-        List<int> scores = new List<int>();
-        List<float> times = new List<float>();
+        CollectionReference gameInstancesRef = db.Collection("users").Document(userId)
+            .Collection("game_history").Document(gameId).Collection("game_instances");
 
-        foreach (DocumentSnapshot document in task.Result.Documents)
+        await gameInstancesRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            Dictionary<string, object> gameData = document.ToDictionary();
-            /* checks if the dictionary contains keys "score" and "Time" 
-            If both keys are found, it retrieves their corresponding values 
-            and assigns them to variables score and time respectively */
-            if (gameData.TryGetValue("score", out object score) && gameData.TryGetValue("Time", out object time))
+            if (task.IsFaulted)
             {
-                scores.Add(Convert.ToInt32(score)); //converts to apprpirate data type
-                times.Add(Convert.ToSingle(time));
+                UnityEngine.Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
+                return;
+            }
+
+            List<(int score, float time)> scoreTimeDict = new List<(int score, float time)>();
+
+            foreach (DocumentSnapshot document in task.Result.Documents)
+            {
+
+                Dictionary<string, object> gameData = document.ToDictionary();
+                /* checks if the dictionary contains keys "score" and "Time" 
+                If both keys are found, it retrieves their corresponding values 
+                and assigns them to variables score and time respectively */
+                if (gameData.TryGetValue("score", out object scoreObj) && gameData.TryGetValue("Time", out object timeObj))
+                {
+                    int score = Convert.ToInt32(scoreObj); //converts to appropriate data type
+                    float time = Convert.ToSingle(timeObj);
+                    scoreTimeDict.Add((score, time));
+                    Debug.Log("Score: " + score + ", Time: " + time);
+
+                }
+
+            }
+
+            Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
+            gameDataDictionary[gameId] = scoreTimeDict;
+        });
+
+           Debug.Log("task 1");
+           CalculateTotalScore();
+           PrintGameDataDictionary();
+    }
+
+
+    //calculate total score for all games
+     public int CalculateTotalScore()
+    {
+        Debug.Log("task 2");
+        int totalScore = 0;
+        int scoreCount =0;
+        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        {   
+            UnityEngine.Debug.Log("score and time " + scoreTimeDict);
+            foreach (var scoreVal in scoreTimeDict)
+            {   
+                UnityEngine.Debug.Log("Score: " + scoreVal.score);
+                totalScore += scoreVal.score;
+                scoreCount++;
             }
         }
 
-    });
+        UnityEngine.Debug.Log("Total Score: " + totalScore + ", Score Count: " + scoreCount);
+        return totalScore;
+    }
+
+    //cal total time for all
+    public float CalculateTotalTime()
+    {
+        float totalTime = 0;
+        int timeCount = 0;
+        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        {
+            foreach (var timeValue in scoreTimeDict)
+            {
+                totalTime += timeValue.time;
+                timeCount++;
+            }
+        }
+
+        UnityEngine. Debug.Log("Total Time: " + totalTime + ", Time Count: " + timeCount);
+        return totalTime;
+    }
+
+public void PrintGameDataDictionary()
+{
+    
+    UnityEngine.Debug.Log("print function running");
+    foreach (var gameData in gameDataDictionary)
+    {
+    string gameId = gameData.Key;
+    var scoreTimeList = gameData.Value;
+
+    foreach (var st in scoreTimeList)
+    {
+        UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
+    }
+    }
 }
+
+
 }
