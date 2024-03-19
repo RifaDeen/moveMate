@@ -21,7 +21,7 @@ public class FBGameManager : MonoBehaviour
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject getReadyImage; // Reference to the "Get Ready" image
     [SerializeField] private GameObject gameOverImage; // Reference to the "Game Over" image
-    [SerializeField] private Button exitImage; // Reference to the "Game Over" image
+    // [SerializeField] private Button exitImage; // Reference to the "Game Over" image
 
     private FBBackgroundMusic backgroundMusic; 
 
@@ -59,7 +59,7 @@ public class FBGameManager : MonoBehaviour
         getReadyImage.SetActive(true);
         playButton.SetActive(true);
         gameOverImage.SetActive(false);
-        exitImage.gameObject.SetActive(true);
+        // exitImage.gameObject.SetActive(true);
         startoffFeedback.gameObject.SetActive(true);
         score1Feedback.gameObject.SetActive(false);
         score5Feedback.gameObject.SetActive(false);
@@ -93,7 +93,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(false);
         gameOverImage.SetActive(false); // Hide "Game Over" image
         getReadyImage.SetActive(false); // Hide "Get Ready" image
-        exitImage.gameObject.SetActive(false); // Hide "Exit" image
+        // exitImage.gameObject.SetActive(false); // Hide "Exit" image
 
         startoffFeedback.gameObject.SetActive(false);
         score1Feedback.gameObject.SetActive(false);
@@ -132,7 +132,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(true);
         getReadyImage.SetActive(false); // Hide "Get Ready" image
         gameOverImage.SetActive(true); // Show "Game Over" image
-        exitImage.gameObject.SetActive(true); // Hide "Exit" image
+        // exitImage.gameObject.SetActive(true); // Hide "Exit" image
 
 
 
@@ -180,7 +180,7 @@ public class FBGameManager : MonoBehaviour
         }
 
         // Check if the game is not in "Get Ready" state and the score is 1
-        if (!isGetReady && score == 1)
+        if (!isGetReady && score == 1 | score ==2)
         {
             StartCoroutine(DisplayScore1Feedback());
         }
@@ -214,43 +214,43 @@ public class FBGameManager : MonoBehaviour
     private IEnumerator DisplayStartoffFeedback()
     {
         startoffFeedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         startoffFeedback.gameObject.SetActive(false);
     }
     private IEnumerator DisplayScore1Feedback()
     {
         score1Feedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         score1Feedback.gameObject.SetActive(false);
     }
     private IEnumerator DisplayScore5Feedback()
     {
         score5Feedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         score5Feedback.gameObject.SetActive(false);
     }
     private IEnumerator DisplayScore10Feedback()
     {
         score10Feedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         score10Feedback.gameObject.SetActive(false);
     }
     private IEnumerator DisplayScore20Feedback()
     {
         score20Feedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         score20Feedback.gameObject.SetActive(false);
     }
     private IEnumerator DisplayScore30Feedback()
     {
         score30Feedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         score30Feedback.gameObject.SetActive(false);
     }
     private IEnumerator DisplayScore50Feedback()
     {
         score50Feedback.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         score50Feedback.gameObject.SetActive(false);
     }
 
