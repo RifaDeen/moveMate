@@ -51,21 +51,28 @@ public class AuthManager : MonoBehaviour
 
     }
 
-    // public void loginRouting(){
-    //      Debug.Log("login clicked");
-    //      UnityEngine.SceneManagement.SceneManager.LoadScene("Login");
+    public void loginRouting(){
+         Debug.Log("login clicked");
+         UnityEngine.SceneManagement.SceneManager.LoadScene("Login");
 
-    // }
+    }
 
-    // public void signupRouting(){
-    //      Debug.Log("signup clicked");
-    //      UnityEngine.SceneManagement.SceneManager.LoadScene("signup");
-    // }
+    public void signupRouting(){
+         Debug.Log("signup clicked");
+         UnityEngine.SceneManagement.SceneManager.LoadScene("signup");
+    }
 
 
     public void OnClickSignup()
     {     
         Debug.Log("Clicked Signup");
+
+        // if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text) || string.IsNullOrEmpty(username.text))
+        // {
+        //     Debug.LogError("Email, password, or username is empty.");
+        //     logText.text = "Email, password, or username is empty.";
+        //     return;
+        // }
 
         FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(email.text.Trim(), password.text.Trim())
         .ContinueWithOnMainThread(task =>
@@ -90,6 +97,7 @@ public class AuthManager : MonoBehaviour
                 } 
             }
 
+            
             // Firebase user has been created.
             Firebase.Auth.AuthResult authResult = task.Result;
             Firebase.Auth.FirebaseUser newUser = authResult.User;
@@ -110,9 +118,12 @@ public class AuthManager : MonoBehaviour
                 string username = newUser.DisplayName ?? "";
                 
                 CurrentUser = new User(newUser.UserId, username, newUser.Email);
-            
+                //Debug.Log("User created successfully: " + CurrentUser.Username + " userId: " + CurrentUser.UserId + " userEmail: " + CurrentUser.Email);
+                //CurrentUser.Score = 0; // Set the initial score if needed
+
                 // Store the user data in Firestore
-                firestoreManager.StoreUserData(CurrentUser);
+                 firestoreManager.StoreUserData(CurrentUser);
+
                 Debug.Log($"User created successfully: {CurrentUser.Username}, userId: {CurrentUser.UserId}, userEmail: {CurrentUser.Email}");
 
 
@@ -126,11 +137,47 @@ public class AuthManager : MonoBehaviour
 
 
     public void OnClickLogin(){
-
-        Debug.Log("Clicked Login");
     
-        FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+        if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
         {
+            logText.text = "Fields are empty";
+            return;
+        }
+        else
+        {
+            FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("Login faulted");
+                    string mail = email.text;
+
+                    
+                        foreach (var exception in task.Exception.InnerExceptions)
+                        {
+                            FirebaseException firebaseEx = exception as FirebaseException;
+                            if (firebaseEx != null)
+                            {
+                                Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+                                logText.text = "An error occurred, please try again";
+                            }
+                        }
+                }
+            });
+        }
+
+        if (string.IsNullOrEmpty(email.text) || string.IsNullOrEmpty(password.text))
+        {
+            logText.text = "Fields are empty";
+            return;
+        }else{
+            FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+            {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
@@ -139,19 +186,20 @@ public class AuthManager : MonoBehaviour
             if (task.IsFaulted)
             {
                 Debug.Log("Login faulted");
-                string mail = email.text;
+                 string mail = email.text;
+        
                 foreach (var exception in task.Exception.InnerExceptions)
                 {
                     FirebaseException firebaseEx = exception as FirebaseException;
                     if (firebaseEx != null)
                     {
-                        Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                        logText.text = "An error occurred, please try again";
+                         Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+                         logText.text = firebaseEx.Message;
                     }
                 }
+               return;
             }
-        
-    
+            else{
             Debug.Log("login successful");
             // Firebase user has been created.
             Firebase.Auth.AuthResult authResult = task.Result;
@@ -164,8 +212,9 @@ public class AuthManager : MonoBehaviour
 
             // Load the home page scene or perform any other post-login actions
             UnityEngine.SceneManagement.SceneManager.LoadScene("HomePage");
-    
+        }
         });
+    }
     }
     
     void AuthStateChanged(object sender, System.EventArgs eventArgs) {
@@ -185,9 +234,6 @@ public class AuthManager : MonoBehaviour
             }
         }
     }
-
-    //Forgot password codes
-
      private void showNotificationMessage(string title, string message)
     {
         Debug.Log($"{title}: {message}");
@@ -205,42 +251,90 @@ public class AuthManager : MonoBehaviour
                 return "An unknown error occurred.";
         }
     }
-    void forgetPasswordSubmit(string forgetPasswordEmail){
-        auth.SendPasswordResetEmailAsync(forgetPasswordEmail).ContinueWithOnMainThread(task => {
-            if (task.IsCanceled)
-            {
-                Debug.LogError("SendPasswordResetEmailAsync was canceled.");
-                return;
-            }
-            if (task.IsFaulted)
-            {
-                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
-                {
-                    Firebase.FirebaseException firebaseEx = exception as FirebaseException;
-                    if (firebaseEx != null)
+        void forgetPasswordSubmit(string forgetPasswordEmail){
+       auth.SendPasswordResetEmailAsync(forgetPasswordEmail).ContinueWithOnMainThread(task => {
+           if (task.IsCanceled)
+      {
+                            Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+                     return;
+                 }
+                if (task.IsFaulted)
+                 {
+                   foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
                     {
-                        // Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                        // logText.text = firebaseEx.Message;
-                        var errorCode=(AuthError)firebaseEx.ErrorCode;
-                        showNotificationMessage("Error",GetErrorMessage(errorCode));
-                    }
-                }
-            }
-            Debug.Log("Password reset email sent successfully.");
-            showNotificationMessage("Success","Password reset email sent successfully.");
-        });
-    }
-    public void OnClickForgetPassword()
-    {
-        // Get the user's email address from the email input field.
-        string forgetPasswordEmail = email.text;
-        // Call the forgetPasswordSubmit method with the user's email address.
-        forgetPasswordSubmit(forgetPasswordEmail);
-    }
+                         Firebase.FirebaseException firebaseEx = exception as FirebaseException;
+                         if (firebaseEx != null)
+                        {
+                             // Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+                             // logText.text = firebaseEx.Message;
+                             var errorCode=(AuthError)firebaseEx.ErrorCode;
+                             showNotificationMessage("Error",GetErrorMessage(errorCode));
+                         }
+                     }
+                 }
+                 Debug.Log("Password reset email sent successfully.");
+                 showNotificationMessage("Success","Password reset email sent successfully.");
+             });
+         }
+         public void OnClickForgetPassword()
+{
+         // Get the user's email address from the email input field.
+     string forgetPasswordEmail = email.text;
+     // Call the forgetPasswordSubmit method with the user's email address.
+     forgetPasswordSubmit(forgetPasswordEmail);
+ }
 
-}
+     }
      
      
 
 
 
+
+// foreach (var exception in task.Exception.InnerExceptions)
+//                 {
+//                     FirebaseException firebaseEx = exception as FirebaseException;
+//                     if (firebaseEx != null)
+//                     {
+//                         Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+//                         logText.text = firebaseEx.Message;
+//                         username.text = "";
+//                         email.text = "";
+//                         password.text = "";
+//                         OnClickSignup();
+//                     }
+//                 }
+//                 return;
+
+
+//var errorCode = (AuthError)firebaseEx.ErrorCode;
+            //             string message;
+            //             if(username.text ==""){
+            //                 Debug.LogError("username is empty");
+            //                 message= "Username is empty";
+            //             }
+            //             switch (errorCode)
+            //             {
+            //                 case AuthError.MissingEmail:
+            //                     message = "Missing Email";
+            //                     break;
+            //                 case AuthError.MissingPassword:
+            //                     message = "Missing Password";
+            //                     break;
+            //                 case AuthError.WeakPassword:
+            //                     message = "Weak Password";
+            //                     break;
+            //                 case AuthError.EmailAlreadyInUse:
+            //                     message = "Email already in use";
+            //                     break;
+            //                 case AuthError.InvalidEmail:
+            //                     message = "Invalid Email";
+            //                     break;
+            //                 default:
+            //                     message = "Signup failed: " + firebaseEx.Message;
+            //                     break;
+            //             }
+            //             logText.text = message;
+            //         }
+            //     }
+            //     return;
