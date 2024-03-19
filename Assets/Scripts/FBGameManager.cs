@@ -14,6 +14,8 @@ public class FBGameManager : MonoBehaviour
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject getReadyImage; // Reference to the "Get Ready" image
     [SerializeField] private GameObject gameOverImage; // Reference to the "Game Over" image
+    [SerializeField] private Button exitImage; // Reference to the "Game Over" image
+
     private FBBackgroundMusic backgroundMusic; 
 
     private User user;
@@ -74,6 +76,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(false);
         gameOverImage.SetActive(false); // Hide "Game Over" image
         getReadyImage.SetActive(false); // Hide "Get Ready" image
+        exitImage.gameObject.SetActive(false); // Hide "Exit" image
 
         Time.timeScale = 1f;
         player.enabled = true;
@@ -104,6 +107,8 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(true);
         getReadyImage.SetActive(false); // Hide "Get Ready" image
         gameOverImage.SetActive(true); // Show "Game Over" image
+        exitImage.gameObject.SetActive(true); // Hide "Exit" image
+
 
         Pause();
 
@@ -153,7 +158,7 @@ public class FBGameManager : MonoBehaviour
     public void OnExitButtonClick()
     {
         // Load another scene before quitting
-        SceneManager.LoadScene("YourSceneName");
+        SceneManager.LoadScene("gamePage");
 
         // Quit the game
         Application.Quit();
