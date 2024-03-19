@@ -47,6 +47,7 @@ public class FBGameManager : MonoBehaviour
         getReadyImage.SetActive(true);
         playButton.SetActive(true);
         gameOverImage.SetActive(false);
+        exitImage.gameObject.SetActive(false);
         startoffFeedback.gameObject.SetActive(true);
         score1Feedback.gameObject.SetActive(false);
         score5Feedback.gameObject.SetActive(false);
@@ -64,6 +65,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(false);
         gameOverImage.SetActive(false); // Hide "Game Over" image
         getReadyImage.SetActive(false); // Hide "Get Ready" image
+        exitImage.gameObject.SetActive(false); // Hide "Exit" image
 
         startoffFeedback.gameObject.SetActive(false);
         score1Feedback.gameObject.SetActive(false);
@@ -204,4 +206,15 @@ public class FBGameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         score50Feedback.gameObject.SetActive(false);
     }
+
+    public void OnExitButtonClick()
+        {
+            // Load another scene before quitting
+            SceneManager.LoadScene("gamePage");
+
+            // Quit the game
+            Application.Quit();
+        }
+
+
 }
