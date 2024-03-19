@@ -150,7 +150,7 @@ public class dinoGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "time_check";
+        userID = "Nafla";
 
         gameID = "dino_game";
         GameUtils gameUtils = new GameUtils();
@@ -158,6 +158,8 @@ public class dinoGameManager : MonoBehaviour
         int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = dinoTimerManager.Instance.GetElapsedTime();
         gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
+        RetrieveData retrieveData = new RetrieveData();
+        retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
     }
 
     public void Retry()

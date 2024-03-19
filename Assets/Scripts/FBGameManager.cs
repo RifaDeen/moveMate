@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Firebase.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,6 +27,13 @@ public class FBGameManager : MonoBehaviour
     private int score;
     public int Score => score;
     private bool isGetReady = true;
+    private User user;
+    private Firebase.FirebaseApp app;
+    private string userID;
+
+    private string gameID;
+    private string gameInstanceId;
+
     private void Awake()
     {
         if (Instance != null)
@@ -55,6 +64,22 @@ public class FBGameManager : MonoBehaviour
         score20Feedback.gameObject.SetActive(false);
         score30Feedback.gameObject.SetActive(false);
         score50Feedback.gameObject.SetActive(false);
+
+         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        var dependencyStatus = task.Result;
+        if (dependencyStatus == Firebase.DependencyStatus.Available) {
+        // Create and hold a reference to your FirebaseApp,
+        // where app is a Firebase.FirebaseApp property of your application class.
+            app = Firebase.FirebaseApp.DefaultInstance;
+            Debug.Log("Firebase is ready to use!");
+
+        // Set a flag here to indicate whether Firebase is ready to use by your app.
+        } else {
+             UnityEngine.Debug.LogError(System.String.Format(
+             "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+            // Firebase Unity SDK is not safe to use here.
+        }
+    });
     }
 
     public void Play()
@@ -107,6 +132,7 @@ public class FBGameManager : MonoBehaviour
         exitImage.gameObject.SetActive(true); // Hide "Exit" image
 
 
+
         Pause();
 
         // Stop background music
@@ -114,6 +140,27 @@ public class FBGameManager : MonoBehaviour
         {
             backgroundMusic.StopMusic();
         }
+         // if (user != null)
+        // {
+        //     userID = user.UserId;
+        // }
+        // else
+        // {
+        //     Debug.LogError("User object is null");
+        // }
+
+        userID = "Nafla";
+
+        gameID = "flappy_game";
+        GameUtils gameUtils = new GameUtils();
+        gameInstanceId = gameUtils.GenerateGameInstanceId();
+        int scoreInt = (int)score; // Cast the score from float to int
+        float gameTime = FBTimerManager.Instance.GetElapsedTime();
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
+        RetrieveData retrieveData = new RetrieveData();
+        retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
+    
+
     }
 
     public void Pause()
