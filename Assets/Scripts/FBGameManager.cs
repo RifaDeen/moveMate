@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Firebase.Extensions;
 using Firebase.Firestore;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FBGameManager : MonoBehaviour
@@ -147,6 +148,15 @@ public class FBGameManager : MonoBehaviour
     {
         score++;
         scoreText.text = score.ToString();
+    }
+
+    public void OnExitButtonClick()
+    {
+        // Load another scene before quitting
+        SceneManager.LoadScene("YourSceneName");
+
+        // Quit the game
+        Application.Quit();
     }
 
 }
