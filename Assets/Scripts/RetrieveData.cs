@@ -49,9 +49,6 @@ public class RetrieveData {
             gameDataDictionary[gameId] = scoreTimeDict;
         });
 
-           Debug.Log("task 1");
-           CalculateTotalScore();
-           PrintGameDataDictionary();
     }
 
 
@@ -94,21 +91,46 @@ public class RetrieveData {
         return totalTime;
     }
 
-public void PrintGameDataDictionary()
-{
-    
-    UnityEngine.Debug.Log("print function running");
-    foreach (var gameData in gameDataDictionary)
+    public void PrintGameDataDictionary()
     {
-    string gameId = gameData.Key;
-    var scoreTimeList = gameData.Value;
+        
+        UnityEngine.Debug.Log("print function running");
+        foreach (var gameData in gameDataDictionary)
+        {
+        string gameId = gameData.Key;
+        var scoreTimeList = gameData.Value;
 
-    foreach (var st in scoreTimeList)
-    {
-        UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
+        foreach (var st in scoreTimeList)
+        {
+            UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
+        }
+        }
     }
+
+    public List<int> scoreList(){
+        List<int> listscore = new List<int>();
+
+        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        {   
+            foreach (var scoreVal in scoreTimeDict)
+            {   
+               listscore.Add(scoreVal.score);
+            }
+        }
+        return listscore;
     }
-}
 
+     public List<float> timeList(){
 
+        List<float> listtime = new List<float>();
+
+        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        {   
+            foreach (var timeValue in scoreTimeDict)
+            {
+               listtime.Add(timeValue.time);
+            }
+        }
+        return listtime;
+    }
 }
