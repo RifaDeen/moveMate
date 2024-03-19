@@ -7,14 +7,20 @@ public class window_Graph : MonoBehaviour
 {
     [SerializeField] private Sprite circleSprite;
     private RectTransform graphContainer;
+    
     private void Awake()
+{
+    graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
+    StartCoroutine(RetrieveAndShowGraphAsync());
+}
+
+    private IEnumerator RetrieveAndShowGraphAsync()
     {
-        graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
         RetrieveData retrieveData = new RetrieveData();
-        List<int> valueList=retrieveData.scoreList();//1 is for score list, 
+        yield return retrieveData.RetrieveGameDataFromFirestore("ruki", "flappy_game"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
+        List<int> valueList = retrieveData.scoreList();
         ShowGraph(valueList);
     }
-
 
 private GameObject CreateCircle(Vector2 anchoredPosition) {
     GameObject gameObject = new GameObject("circle", typeof(Image));

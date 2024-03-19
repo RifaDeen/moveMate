@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Firebase.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,6 +34,8 @@ public class FBGameManager : MonoBehaviour
 
     private string gameID;
     private string gameInstanceId;
+
+    private RetrieveData retrieveData;
 
     private void Awake()
     {
@@ -149,7 +152,7 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "Nafla";
+        userID = "ruki";
 
         gameID = "flappy_game";
         GameUtils gameUtils = new GameUtils();
@@ -157,10 +160,7 @@ public class FBGameManager : MonoBehaviour
         int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = FBTimerManager.Instance.GetElapsedTime();
         gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
-        RetrieveData retrieveData = new RetrieveData();
         retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
-    
-
     }
 
     public void Pause()
@@ -262,6 +262,4 @@ public class FBGameManager : MonoBehaviour
             // Quit the game
             Application.Quit();
         }
-
-
 }
