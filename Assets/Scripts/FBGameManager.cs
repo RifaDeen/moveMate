@@ -47,7 +47,7 @@ public class FBGameManager : MonoBehaviour
         getReadyImage.SetActive(true);
         playButton.SetActive(true);
         gameOverImage.SetActive(false);
-        exitImage.gameObject.SetActive(false);
+        exitImage.gameObject.SetActive(true);
         startoffFeedback.gameObject.SetActive(true);
         score1Feedback.gameObject.SetActive(false);
         score5Feedback.gameObject.SetActive(false);
