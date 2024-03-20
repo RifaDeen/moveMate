@@ -1,29 +1,41 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Firebase.Extensions;
-using Firebase.Firestore;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FBGameManager : MonoBehaviour
 {
-    public static FBGameManager Instance { get; private set; }
-   [SerializeField] private FBPlayer player;
+    public static   FBGameManager Instance { get; private set; }
+    [SerializeField] private FBPlayer player;
     [SerializeField] private Text scoreText;
+    [SerializeField] private Text startoffFeedback;
+    [SerializeField] private Text score1Feedback;
+    [SerializeField] private Text score5Feedback;
+    [SerializeField] private Text score10Feedback;
+    [SerializeField] private Text score20Feedback;
+    [SerializeField] private Text score30Feedback;
+    [SerializeField] private Text score50Feedback;
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject getReadyImage; // Reference to the "Get Ready" image
     [SerializeField] private GameObject gameOverImage; // Reference to the "Game Over" image
+    // [SerializeField] private Button exitImage; // Reference to the "Game Over" image
+
     private FBBackgroundMusic backgroundMusic; 
 
+    private int score;
+    public int Score => score;
+    private bool isGetReady = true;
     private User user;
     private Firebase.FirebaseApp app;
-
     private string userID;
 
     private string gameID;
     private string gameInstanceId;
-    private int score;
-    public int Score => score;
+
+    private RetrieveData retrieveData;
 
     private void Awake()
     {
@@ -44,12 +56,19 @@ public class FBGameManager : MonoBehaviour
 
     private void Start()
     {
-        // Show "Get Ready" image and play button when the game starts
         getReadyImage.SetActive(true);
         playButton.SetActive(true);
-         gameOverImage.SetActive(false);
+        gameOverImage.SetActive(false);
+        // exitImage.gameObject.SetActive(true);
+        startoffFeedback.gameObject.SetActive(true);
+        score1Feedback.gameObject.SetActive(false);
+        score5Feedback.gameObject.SetActive(false);
+        score10Feedback.gameObject.SetActive(false);
+        score20Feedback.gameObject.SetActive(false);
+        score30Feedback.gameObject.SetActive(false);
+        score50Feedback.gameObject.SetActive(false);
 
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
         var dependencyStatus = task.Result;
         if (dependencyStatus == Firebase.DependencyStatus.Available) {
         // Create and hold a reference to your FirebaseApp,
@@ -70,9 +89,19 @@ public class FBGameManager : MonoBehaviour
     {
         score = 0;
         scoreText.text = score.ToString();
+        isGetReady = false; 
         playButton.SetActive(false);
         gameOverImage.SetActive(false); // Hide "Game Over" image
         getReadyImage.SetActive(false); // Hide "Get Ready" image
+        // exitImage.gameObject.SetActive(false); // Hide "Exit" image
+
+        startoffFeedback.gameObject.SetActive(false);
+        score1Feedback.gameObject.SetActive(false);
+        score5Feedback.gameObject.SetActive(false);
+        score10Feedback.gameObject.SetActive(false);
+        score20Feedback.gameObject.SetActive(false);
+        score30Feedback.gameObject.SetActive(false);
+        score50Feedback.gameObject.SetActive(false);
 
         Time.timeScale = 1f;
         player.enabled = true;
@@ -103,6 +132,9 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(true);
         getReadyImage.SetActive(false); // Hide "Get Ready" image
         gameOverImage.SetActive(true); // Show "Game Over" image
+        // exitImage.gameObject.SetActive(true); // Hide "Exit" image
+
+
 
         Pause();
 
@@ -111,8 +143,7 @@ public class FBGameManager : MonoBehaviour
         {
             backgroundMusic.StopMusic();
         }
-
-        // if (user != null)
+         // if (user != null)
         // {
         //     userID = user.UserId;
         // }
@@ -121,20 +152,15 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "time_check";
+        userID = "ruki";
 
-        gameID = "flappy_bird";
+        gameID = "flappy_game";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
-
-         // Get game time from FBTimerManager
+        int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = FBTimerManager.Instance.GetElapsedTime();
-
-        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, score, (float)Math.Round(gameTime,2));
-        var retrieveData = new RetrieveData();
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
         retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
-        //retrieveData.CalculateTotalScore();
-        //retrieveData.PrintGameDataDictionary();
     }
 
     public void Pause()
@@ -147,6 +173,93 @@ public class FBGameManager : MonoBehaviour
     {
         score++;
         scoreText.text = score.ToString();
+
+        if (isGetReady)
+        {
+            StartCoroutine(DisplayStartoffFeedback());
+        }
+
+        // Check if the game is not in "Get Ready" state and the score is 1
+        if (!isGetReady && score == 1 | score ==2)
+        {
+            StartCoroutine(DisplayScore1Feedback());
+        }
+
+        // Check if the game is not in "Get Ready" state and the score is 5
+        if (!isGetReady && score == 5)
+        {
+            StartCoroutine(DisplayScore5Feedback());
+        }
+
+        if (!isGetReady && score == 10)
+        {
+            StartCoroutine(DisplayScore10Feedback());
+        }
+
+        if (!isGetReady && score == 20)
+        {
+            StartCoroutine(DisplayScore20Feedback());
+        }
+
+        if (!isGetReady && score == 30)
+        {
+            StartCoroutine(DisplayScore30Feedback());
+        }
+        if (!isGetReady && score == 50)
+        {
+            StartCoroutine(DisplayScore50Feedback());
+        }
     }
 
+    private IEnumerator DisplayStartoffFeedback()
+    {
+        startoffFeedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        startoffFeedback.gameObject.SetActive(false);
+    }
+    private IEnumerator DisplayScore1Feedback()
+    {
+        score1Feedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        score1Feedback.gameObject.SetActive(false);
+    }
+    private IEnumerator DisplayScore5Feedback()
+    {
+        score5Feedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        score5Feedback.gameObject.SetActive(false);
+    }
+    private IEnumerator DisplayScore10Feedback()
+    {
+        score10Feedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        score10Feedback.gameObject.SetActive(false);
+    }
+    private IEnumerator DisplayScore20Feedback()
+    {
+        score20Feedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        score20Feedback.gameObject.SetActive(false);
+    }
+    private IEnumerator DisplayScore30Feedback()
+    {
+        score30Feedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        score30Feedback.gameObject.SetActive(false);
+    }
+    private IEnumerator DisplayScore50Feedback()
+    {
+        score50Feedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        score50Feedback.gameObject.SetActive(false);
+    }
+
+    public void OnExitButtonClick()
+        {
+            // Load another scene before quitting
+            SceneManager.LoadScene("gamePage");
+
+            // Quit the game
+            Application.Quit();
+        }
 }

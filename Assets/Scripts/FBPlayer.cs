@@ -69,6 +69,8 @@ public class FBPlayer : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Obstacle")) {
             FBGameManager.Instance.GameOver();
+        } else if (other.gameObject.CompareTag("MainCamera")) {
+            FBGameManager.Instance.GameOver();
         } else if (other.gameObject.CompareTag("Scoring")) {
             FBGameManager.Instance.IncreaseScore();
         }

@@ -4,6 +4,7 @@ using Firebase.Extensions;
 using Firebase.Firestore;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -25,6 +26,8 @@ public class dinoGameManager : MonoBehaviour
     [SerializeField] private Text timerText;    
     [SerializeField] private TextMeshProUGUI getReadyText;
     [SerializeField] private Button retryButton;
+    [SerializeField] private Button exitImage; // Reference to the "Game Over" image
+
 
     private DinoPlayer player;
     private dinoSpawner spawner;
@@ -63,8 +66,10 @@ public class dinoGameManager : MonoBehaviour
         // Show "Get Ready" text and retry button initially
         getReadyText.gameObject.SetActive(true);
         retryButton.gameObject.SetActive(true);
+        exitImage.gameObject.SetActive(true);
         retryButton.interactable = true;  // Enable retry button
         gameOverText.gameObject.SetActive(false);
+        
 
         // Stop the timer when the game is over
         dinoTimerManager.Instance.StopTimer();
@@ -106,6 +111,8 @@ public class dinoGameManager : MonoBehaviour
         gameOverText.gameObject.SetActive(false);
         retryButton.gameObject.SetActive(false);
         getReadyText.gameObject.SetActive(false);
+        exitImage.gameObject.SetActive(false);
+
 
         // Enable retry button for the next game
         retryButton.interactable = true;
@@ -124,6 +131,7 @@ public class dinoGameManager : MonoBehaviour
         gameOverText.gameObject.SetActive(true);
         retryButton.gameObject.SetActive(true);
         getReadyText.gameObject.SetActive(false);
+        exitImage.gameObject.SetActive(true);
 
         // Stop the timer when the game is over
         dinoTimerManager.Instance.StopTimer();
@@ -142,7 +150,7 @@ public class dinoGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "time_check";
+        userID = "Nafla";
 
         gameID = "dino_game";
         GameUtils gameUtils = new GameUtils();
@@ -150,6 +158,8 @@ public class dinoGameManager : MonoBehaviour
         int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = dinoTimerManager.Instance.GetElapsedTime();
         gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
+        RetrieveData retrieveData = new RetrieveData();
+        retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
     }
 
     public void Retry()
@@ -194,4 +204,14 @@ public class dinoGameManager : MonoBehaviour
 
         hiscoreText.text = Mathf.FloorToInt(hiscore).ToString("D5");
     }
+
+    public void OnExitButtonClick()
+        {
+            // Load another scene before quitting
+            SceneManager.LoadScene("gamePage");
+
+            // Quit the game
+            Application.Quit();
+        }
+
 }
