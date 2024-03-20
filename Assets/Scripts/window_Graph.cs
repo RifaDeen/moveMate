@@ -17,7 +17,7 @@ public class window_Graph : MonoBehaviour
     private IEnumerator RetrieveAndShowGraphAsync()
     {
         RetrieveData retrieveData = new RetrieveData();
-        yield return retrieveData.RetrieveGameDataFromFirestore("ruki", "flappy_game"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
+        yield return retrieveData.RetrieveGameDataFromFirestore("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
         List<int> valueList = retrieveData.scoreList();
         ShowGraph(valueList);
     }

@@ -152,9 +152,9 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "ruki";
+        userID = "newplayer";
 
-        gameID = "flappy_game";
+        gameID = "gameid";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
         int scoreInt = (int)score; // Cast the score from float to int

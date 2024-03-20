@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Firebase.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +18,12 @@ public class CoronaScoreManager : MonoBehaviour
     [SerializeField] private Text score30Feedback;
     [SerializeField] private Text score40Feedback;
     [SerializeField] private Text score50Feedback;
+    private User user;
+    private Firebase.FirebaseApp app;
+    private string userID;
+
+    private string gameID;
+    private string gameInstanceId;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +38,22 @@ public class CoronaScoreManager : MonoBehaviour
         score30Feedback.gameObject.SetActive(false);
         score40Feedback.gameObject.SetActive(false);
         score50Feedback.gameObject.SetActive(false);
+
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        var dependencyStatus = task.Result;
+        if (dependencyStatus == Firebase.DependencyStatus.Available) {
+        // Create and hold a reference to your FirebaseApp,
+        // where app is a Firebase.FirebaseApp property of your application class.
+            app = Firebase.FirebaseApp.DefaultInstance;
+            Debug.Log("Firebase is ready to use!");
+
+        // Set a flag here to indicate whether Firebase is ready to use by your app.
+        } else {
+             UnityEngine.Debug.LogError(System.String.Format(
+             "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+            // Firebase Unity SDK is not safe to use here.
+        }
+    });
     }
 
     // Update is called once per frame
@@ -49,8 +73,25 @@ public class CoronaScoreManager : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
-        // Implement any additional actions when the game is over
-        // For example, you can show a game over panel or perform other actions.
+        
+        // if (user != null)
+        // {
+        //     userID = user.UserId;
+        // }
+        // else
+        // {
+        //     Debug.LogError("User object is null");
+        // }
+
+        userID = "newplayer";
+
+        gameID = "gameid";
+        GameUtils gameUtils = new GameUtils();
+        gameInstanceId = gameUtils.GenerateGameInstanceId();
+        int scoreInt = (int)score; // Cast the score from float to int
+        float gameTime = dinoTimerManager.Instance.GetElapsedTime();
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
+   
     }
 
     // Start scoring

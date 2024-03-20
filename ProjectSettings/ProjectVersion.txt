@@ -1,12 +1,2 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-m_EditorVersion: 2022.3.21f1
-m_EditorVersionWithRevision: 2022.3.21f1 (bf09ca542b87)
-=======
-m_EditorVersion: 2022.3.18f1
-m_EditorVersionWithRevision: 2022.3.18f1 (d29bea25151d)
->>>>>>> 8167da6b831ceeb8d57efaa5b4f6fb75a75c5739
-=======
 m_EditorVersion: 2022.3.20f1
 m_EditorVersionWithRevision: 2022.3.20f1 (61c2feb0970d)
->>>>>>> parent of 8167da6 (did few adjustments on flappy and adjusted the frame of corona game)
