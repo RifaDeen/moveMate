@@ -89,7 +89,7 @@ public class CoronaScoreManager : MonoBehaviour
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
         int scoreInt = (int)score; // Cast the score from float to int
-        float gameTime = dinoTimerManager.Instance.GetElapsedTime();
+        float gameTime = CoronaTimerManager.Instance.GetElapsedTime();
         gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
    
     }

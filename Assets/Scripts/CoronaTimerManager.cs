@@ -43,4 +43,9 @@ public class CoronaTimerManager : MonoBehaviour
     {
         isGameOver = true;
     }
+
+    public float GetElapsedTime()
+    {
+        return elapsedTime;
+    }
 }
