@@ -21,7 +21,7 @@ public class FBGameManager : MonoBehaviour
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject getReadyImage; // Reference to the "Get Ready" image
     [SerializeField] private GameObject gameOverImage; // Reference to the "Game Over" image
-    // [SerializeField] private Button exitImage; // Reference to the "Game Over" image
+    [SerializeField] private Button exitImage; // Reference to the "Game Over" image
 
     private FBBackgroundMusic backgroundMusic; 
 
@@ -59,7 +59,7 @@ public class FBGameManager : MonoBehaviour
         getReadyImage.SetActive(true);
         playButton.SetActive(true);
         gameOverImage.SetActive(false);
-        // exitImage.gameObject.SetActive(true);
+        exitImage.gameObject.SetActive(true);
         startoffFeedback.gameObject.SetActive(true);
         score1Feedback.gameObject.SetActive(false);
         score5Feedback.gameObject.SetActive(false);
@@ -93,7 +93,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(false);
         gameOverImage.SetActive(false); // Hide "Game Over" image
         getReadyImage.SetActive(false); // Hide "Get Ready" image
-        // exitImage.gameObject.SetActive(false); // Hide "Exit" image
+        exitImage.gameObject.SetActive(false); // Hide "Exit" image
 
         startoffFeedback.gameObject.SetActive(false);
         score1Feedback.gameObject.SetActive(false);
@@ -132,7 +132,7 @@ public class FBGameManager : MonoBehaviour
         playButton.SetActive(true);
         getReadyImage.SetActive(false); // Hide "Get Ready" image
         gameOverImage.SetActive(true); // Show "Game Over" image
-        // exitImage.gameObject.SetActive(true); // Hide "Exit" image
+        exitImage.gameObject.SetActive(true); // Hide "Exit" image
 
 
 
