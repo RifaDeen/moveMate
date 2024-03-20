@@ -10,6 +10,7 @@ public class CoronaGameOver : MonoBehaviour
 
     // Default camera size
     private float defaultCameraSize;
+    private CoronaTimerManager timerManager;
 
     void Start()
     {
@@ -18,6 +19,9 @@ public class CoronaGameOver : MonoBehaviour
         {
             defaultCameraSize = mainCamera.orthographicSize;
         }
+
+         // Find and store the TimerManager instance
+        timerManager = CoronaTimerManager.Instance;
     }
 
     void Update()
@@ -37,11 +41,22 @@ public class CoronaGameOver : MonoBehaviour
         {
             mainCamera.orthographicSize = defaultCameraSize;
         }
+        // Restart the timer
+        if (timerManager != null)
+        {
+            timerManager.RestartTimer();
+        }
     }
 
     // Show game over panel and perform other actions
     private void GameOverAction()
     {
         gameOverPanel.SetActive(true);
+        
+        // Stop the timer when the game over panel appears
+        if (timerManager != null)
+        {
+            timerManager.StopTimer();
+        }
     }
 }
