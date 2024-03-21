@@ -184,4 +184,22 @@ public class RetrieveData {
         Debug.Log("score is " + item);
     }
 }
+
+    public float calAvgScore(List<int> list){
+        int sum = 0;
+        foreach (int score in list)
+        {
+            sum += score;
+        }
+        return (float)Math.Round((float)sum/list.Count, 1);
+    }
+
+    public float calAvgTime(List<int> list){
+        int sum = 0;
+        foreach (int time in list)
+        {
+            sum += time;
+        }
+        return (float)Math.Round((float)sum/list.Count, 1);
+    }
 }
