@@ -204,7 +204,7 @@ public class dinoGameManager : MonoBehaviour
     private System.Collections.IEnumerator DisplayFeedback(Text feedbackText)
     {
         feedbackText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         feedbackText.gameObject.SetActive(false);
     }
 
