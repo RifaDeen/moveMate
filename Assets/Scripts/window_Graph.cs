@@ -33,14 +33,12 @@ private void AddScore(int score, List<int> scoreList)
          yield return retrieveData.RetrieveGameData("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
         //  List<int> valueList = retrieveData.scoreList();
          List<int> valueList = new List<int>();
-    foreach (int score in retrieveData.scoreList())
-    {
-        AddScore(score, valueList);
-    }
-         ShowGraph(valueList);
-  
-        
-    }
+            foreach (int score in retrieveData.scoreList())
+            {
+                AddScore(score, valueList);
+            }
+                ShowGraph(valueList);
+        }
 
     private void CreateAxisLines()
 {
@@ -97,10 +95,11 @@ private void ShowGraph(List<int> valueList){
     float graphHeight= graphContainer.sizeDelta.y;
     float ymaximum=100f;
     float xsize=50f;
+    
     GameObject lastCircleGameObject=null;
     for (int i=0; i<valueList.Count; i++){
         if (valueList[i] == 0) continue; // Skip if the score is zero
-        float xPosition = i * xsize;
+        float xPosition = (i+1)+ i * xsize; //
         float yPosition = (valueList[i] / ymaximum) * graphHeight;
         GameObject circleGameObject=CreateCircle(new Vector2(xPosition, yPosition));
         if(lastCircleGameObject!=null){
