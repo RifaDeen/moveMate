@@ -11,20 +11,21 @@ public class window_Graph : MonoBehaviour
     private void Awake()
 {
 //     graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
-//     StartCoroutine(RetrieveAndShowGraphAsync());
-// }
-
-//     private IEnumerator RetrieveAndShowGraphAsync()
-//     {
-//         RetrieveData retrieveData = new RetrieveData();
-//         yield return retrieveData.RetrieveGameDataFromFirestore("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
-//         List<int> valueList = retrieveData.scoreList();
-//         ShowGraph(valueList);
-  graphContainer = transform.Find("ScrollView/graphContainer").GetComponent<RectTransform>();
+graphContainer = transform.Find("ScrollView/graphContainer").GetComponent<RectTransform>();
+   graphContainer.pivot = new Vector2(0, 0.5f); // Set the pivot to expand to the right
+       StartCoroutine(RetrieveAndShowGraphAsync());
+}
+    private IEnumerator RetrieveAndShowGraphAsync()     {
+         RetrieveData retrieveData = new RetrieveData();
+         yield return retrieveData.RetrieveGameData("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
+         List<int> valueList = retrieveData.scoreList();
+         ShowGraph(valueList);
+  
         
-        List<int> valueList=new List<int>(){5,0,99,0,78,54,30,23,9,4,4,60,50,90,40};
-        ShowGraph(valueList);
+        // List<int> valueList=new List<int>(){5,0,99,0,78,54,30,23,9,4,4,60,50,90,40};
+        // ShowGraph(valueList);
     }
+
 
 private GameObject CreateCircle(Vector2 anchoredPosition) {
     // GameObject gameObject = new GameObject("circle", typeof(Image));
@@ -77,7 +78,8 @@ private void ShowGraph(List<int> valueList){
 private void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB){
     GameObject gameObject = new GameObject("dotConnection", typeof(Image));
     gameObject.transform.SetParent(graphContainer, false);
-    gameObject.GetComponent<Image>().color = new Color(1,1,1,.5f);
+    // gameObject.GetComponent<Image>().color = new Color(1,1,1,.5f);
+    gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0); // Set color to orange
     RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
     Vector2 dir = (dotPositionB - dotPositionA).normalized;
     float distance = Vector2.Distance(dotPositionA, dotPositionB);
