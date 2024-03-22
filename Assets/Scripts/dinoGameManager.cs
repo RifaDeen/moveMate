@@ -203,20 +203,17 @@ public class dinoGameManager : MonoBehaviour
         NewGame();
     }
 
-    private void Update()
+    public void ObstaclePassed()
     {
-        if (!isGameActive)
+        if (isGameActive)
         {
-            // Disable player control during "Get Ready" phase
-            return;
+            // Increase score by one
+            score += 1;
+            scoreText.text = Mathf.FloorToInt(score).ToString("D3");
+
+            // Check for score milestones and display feedback
+            CheckScoreMilestones();
         }
-
-        gameSpeed += gameSpeedIncrease * Time.deltaTime;
-        score += gameSpeed * Time.deltaTime;
-        scoreText.text = Mathf.FloorToInt(score).ToString("D5");
-
-        // Check for score milestones and display feedback
-        CheckScoreMilestones();
     }
 
     private void CheckScoreMilestones()
@@ -260,7 +257,7 @@ public class dinoGameManager : MonoBehaviour
     private System.Collections.IEnumerator DisplayFeedback(Text feedbackText)
     {
         feedbackText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(4f);
         feedbackText.gameObject.SetActive(false);
     }
 
@@ -274,7 +271,7 @@ public class dinoGameManager : MonoBehaviour
             PlayerPrefs.SetFloat("hiscore", hiscore);
         }
 
-        hiscoreText.text = Mathf.FloorToInt(hiscore).ToString("D5");
+        hiscoreText.text = Mathf.FloorToInt(hiscore).ToString("D3");
     }
 
      public void OnExitButtonClick()
