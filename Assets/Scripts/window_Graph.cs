@@ -10,20 +10,25 @@ public class window_Graph : MonoBehaviour
     
     private void Awake()
 {
-    graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
-    StartCoroutine(RetrieveAndShowGraphAsync());
-}
+//     graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
+//     StartCoroutine(RetrieveAndShowGraphAsync());
+// }
 
-    private IEnumerator RetrieveAndShowGraphAsync()
-    {
-        RetrieveData retrieveData = new RetrieveData();
-        yield return retrieveData.RetrieveGameDataFromFirestore("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
-        List<int> valueList = retrieveData.scoreList();
+//     private IEnumerator RetrieveAndShowGraphAsync()
+//     {
+//         RetrieveData retrieveData = new RetrieveData();
+//         yield return retrieveData.RetrieveGameDataFromFirestore("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
+//         List<int> valueList = retrieveData.scoreList();
+//         ShowGraph(valueList);
+  graphContainer = transform.Find("ScrollView/graphContainer").GetComponent<RectTransform>();
+        
+        List<int> valueList=new List<int>(){5,0,99,0,78,54,30,23,9,4,4,60,50,90,40};
         ShowGraph(valueList);
     }
 
 private GameObject CreateCircle(Vector2 anchoredPosition) {
-    GameObject gameObject = new GameObject("circle", typeof(Image));
+    // GameObject gameObject = new GameObject("circle", typeof(Image));
+    GameObject gameObject = new GameObject("circle", typeof(Image), typeof(RectTransform));
     gameObject.transform.SetParent(graphContainer, false);
     gameObject.GetComponent<Image>().sprite = circleSprite; // Fix: Access the Image component and assign the circleSprite to its sprite property
     RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
@@ -33,12 +38,30 @@ private GameObject CreateCircle(Vector2 anchoredPosition) {
     rectTransform.anchorMax = new Vector2(0, 0);
     return gameObject;
 }
+// private void ShowGraph(List<int> valueList){
+//     float graphHeight= graphContainer.sizeDelta.y;
+//     float ymaximum=100f;
+//     float xsize=50f;
+//     GameObject lastCircleGameObject=null;
+//     for (int i=0; i<valueList.Count; i++){
+//         float xPosition = xsize + i * xsize;
+//         float yPosition = (valueList[i] / ymaximum) * graphHeight;
+//         GameObject circleGameObject=CreateCircle(new Vector2(xPosition, yPosition));
+//         if(lastCircleGameObject!=null){
+//             CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition);
+//         }
+//         lastCircleGameObject=circleGameObject;
+//     }
+
+// }
+
 private void ShowGraph(List<int> valueList){
     float graphHeight= graphContainer.sizeDelta.y;
     float ymaximum=100f;
     float xsize=50f;
     GameObject lastCircleGameObject=null;
     for (int i=0; i<valueList.Count; i++){
+        if (valueList[i] == 0) continue; // Skip if the score is zero
         float xPosition = xsize + i * xsize;
         float yPosition = (valueList[i] / ymaximum) * graphHeight;
         GameObject circleGameObject=CreateCircle(new Vector2(xPosition, yPosition));
@@ -47,7 +70,8 @@ private void ShowGraph(List<int> valueList){
         }
         lastCircleGameObject=circleGameObject;
     }
-
+    // Update the width of the graphContainer to fit all points
+    graphContainer.sizeDelta = new Vector2((valueList.Count - 1) * xsize, graphContainer.sizeDelta.y);
 }
 
 private void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB){
