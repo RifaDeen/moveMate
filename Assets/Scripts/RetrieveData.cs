@@ -55,7 +55,7 @@ public class RetrieveData {
 
     // }
 
-    public IEnumerator RetrieveGameDataFromFirestore(string userId, string gameId)
+    public IEnumerator RetrieveGameData(string userId, string gameId)
 {
     FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
@@ -90,6 +90,47 @@ public class RetrieveData {
     Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
     gameDataDictionary[gameId] = scoreTimeDict;
 }
+Dictionary<string, List<(int score, float time, DateTime date)>> gameDataDictionaryWithDate = new Dictionary<string, List<(int score, float time, DateTime date)>>();
+public IEnumerator RetrieveGameDataByDate(string userId, string gameId, DateTime specificDate)
+{
+    FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+
+    CollectionReference gameInstancesRef = db.Collection("users").Document(userId)
+        .Collection("game_history").Document(gameId).Collection("game_instances");
+
+    Query gameInstancesQuery = gameInstancesRef.WhereEqualTo("date", specificDate.Date);
+
+    var task = gameInstancesQuery.GetSnapshotAsync();
+
+    yield return new WaitUntil(() => task.IsCompleted);
+
+    if (task.IsFaulted)
+    {
+        UnityEngine.Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
+        yield break;
+    }
+
+    List<(int score, float time, DateTime date)> scoreTimeDateList = new List<(int score, float time, DateTime date)>();
+
+    foreach (DocumentSnapshot document in task.Result.Documents)
+    {
+        Dictionary<string, object> gameData = document.ToDictionary();
+
+        if (gameData.TryGetValue("score", out object scoreObj) && gameData.TryGetValue("Time", out object timeObj) && gameData.TryGetValue("date", out object dateObj))
+        {
+            int score = Convert.ToInt32(scoreObj);
+            float time = Convert.ToSingle(timeObj);
+            DateTime date = (DateTime)dateObj;
+
+            scoreTimeDateList.Add((score, time, date));
+            Debug.Log("Score: " + score + ", Time: " + time + ", Date: " + date);
+        }
+    }
+
+    Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
+    gameDataDictionaryWithDate[gameId] = scoreTimeDateList;
+}
+
 
 
     //calculate total score for all games
