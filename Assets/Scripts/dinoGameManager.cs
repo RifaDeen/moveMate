@@ -34,6 +34,7 @@ public class dinoGameManager : MonoBehaviour
     [SerializeField] private Text score500Feedback;
     [SerializeField] private Text score750Feedback;
 
+    public dinoBackgroundMusic backgroundMusic;
     private DinoPlayer player;
     private dinoSpawner spawner;
     private bool isGameActive = false;
@@ -83,6 +84,12 @@ public class dinoGameManager : MonoBehaviour
         score500Feedback.gameObject.SetActive(false);
         score750Feedback.gameObject.SetActive(false);
 
+         // Find the dinoBackgroundMusic object in the scene and get its component
+        backgroundMusic = FindObjectOfType<dinoBackgroundMusic>();
+
+        // Play the background music when the game starts
+        backgroundMusic.PlayMusic();
+
         // Stop the timer when the game is over
         dinoTimerManager.Instance.StopTimer();
 
@@ -118,6 +125,9 @@ public class dinoGameManager : MonoBehaviour
         // Start the timer when the game begins
         dinoTimerManager.Instance.RestartTimer();
 
+        // Play the background music when the game starts
+        backgroundMusic.PlayMusic();
+
         player.gameObject.SetActive(true);
         spawner.gameObject.SetActive(true);
         gameOverText.gameObject.SetActive(false);
@@ -143,6 +153,9 @@ public class dinoGameManager : MonoBehaviour
         retryButton.gameObject.SetActive(true);
         exitButton.gameObject.SetActive(true);
         getReadyText.gameObject.SetActive(false);
+
+        // Stop the background music when the game is over
+        backgroundMusic.StopMusic();
 
         // Stop the timer when the game is over
         dinoTimerManager.Instance.StopTimer();
