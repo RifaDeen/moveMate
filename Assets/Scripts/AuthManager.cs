@@ -11,12 +11,13 @@ using UnityEngine.UIElements;
 using System;
 using System.Text.RegularExpressions;
 using Unity.VisualScripting;
+using System.Threading.Tasks;
 
 
 public class AuthManager : MonoBehaviour
 {
     public Text logText;
-    public TextMeshProUGUI username, email, password;
+    public TextMeshProUGUI username, email, password, forgetEmail, newPassword;
     public UnityEngine.UI.Button signupButton; // Specify the namespace for Button
 
     public static User CurrentUser { get; private set;}
@@ -240,57 +241,261 @@ public class AuthManager : MonoBehaviour
             }
         }
     }
-     private void showNotificationMessage(string title, string message)
+
+    public void OnClickForgetPassword()
     {
-        Debug.Log($"{title}: {message}");
+        string email = forgetEmail.text;
+        Debug.Log(email); // Get the email entered by the user
+
+        var db = FirebaseFirestore.DefaultInstance;
+        DocumentReference docRef = db.Collection("User_Details").Document(email);
+       // StartCoroutine(FetchUserData(docRef));
+    
+       
+//    private IEnumerator FetchUserData(DocumentReference docRef)
+// {
+//     Task<DocumentSnapshot> fetchTask = docRef.GetSnapshotAsync();
+
+//     while (!fetchTask.IsCompleted)
+//     {
+//         yield return null; // Wait until the task is completed
+//     }
+
+//     if (fetchTask.IsFaulted)
+//     {
+//         Debug.LogError($"Failed to retrieve user data: {fetchTask.Exception}");
+//         yield break;
+//     }
+
+//     DocumentSnapshot snapshot = fetchTask.Result;
+
+//     if (snapshot.Exists)
+//     {
+//         // Get the email field from the snapshot
+//         string userEmail = snapshot.GetValue<string>("email");
+//         Debug.Log($"User data retrieved successfully: Email = {userEmail}");
+//         // Call the method to send the password reset email
+//         SendPasswordResetEmail(userEmail);
+//     }
+//     else
+//     {
+//         Debug.Log("No such user.");
+//         logText.text = "Email is not registered with an account.";
+//         forgetEmail.text = "";
+//     }
+// }
+
+
+
+
+
+
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Failed to retrieve user data: {task.Exception}");
+                return;
+            }
+            else if (task.Result.Exists)
+            {
+                Dictionary<string, object> userData = task.Result.ToDictionary();
+                //string email = userData["email"].ToString();
+                string userEmail = userData["email"].ToString();
+
+                Debug.Log($"User data retrieved successfully: Email = {userEmail}");
+                SendPasswordResetEmail(userEmail);
+                
+                
+            }
+            else
+            {
+                Debug.Log("No such user.");
+                logText.text="Email is not registered with an account.";
+                forgetEmail.text = "";
+                
+            }
+        });
+        
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // var db = FirebaseFirestore.DefaultInstance;
+    // var docRef = db.Collection("YOUR_COLLECTION_NAME").Document(email);
+
+    // docRef.GetSnapshotAsync().ContinueWith(task =>
+    // {
+    //     if (task.IsCompleted)
+    //     {
+    //         DocumentSnapshot snapshot = task.Result;
+    //         if (snapshot.Exists)
+    //         {
+    //             Debug.LogFormat("Document data for {0} document:", snapshot.Id);
+    //             Dictionary<string, object> documentData = snapshot.ToDictionary();
+    //             // Email exists in the Firestore collection
+    //             // You can now proceed with your logic here
+    //             SendPasswordResetEmail(email);
+
+    //         }
+    //         else
+    //         {
+    //             logText.text = "Email is not registered with an account.";
+    //             Debug.LogFormat("Document {0} does not exist!", snapshot.Id);
+    //             // Email does not exist in the Firestore collection
+    //             // You can now proceed with your logic here
+                
+    //             forgetEmail.text = "";
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Debug.LogError("Error checking email: " + task.Exception);
+    //     }
+    // });
+
+    
+//}
+
+        // // Check if the email belongs to an authenticated user
+
+        //  FirebaseAuth.DefaultInstance.FetchSignInMethodsForEmailAsync(forgetEmail.text).ContinueWith(task =>
+        // {
+        //     if (task.IsFaulted)
+        //     {
+        //         Debug.LogError("Error checking email: " + task.Exception);
+        //         return;
+        //     }
+
+        //     if (task.Result.SignInMethods.Contains("password"))
+        //     {
+        //         // Email belongs to an authenticated user
+        //         SendPasswordResetEmail(email);
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning("Email does not belong to an authenticated user.");
+        //         logText.Text = "Email is not registered with an account.";
+        //         // Provide feedback to the user indicating that the email does not belong to an authenticated user
+        //     }
+        // });
+    
+
+    public void SendPasswordResetEmail(string email)
+    {
+         FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(email).ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Error sending password reset email: " + task.Exception);
+                return;
+            }
+
+            Debug.Log("Password reset email sent successfully.");
+            // Redirect the user to the reset password page within the app
+            UnityEngine.SceneManagement.SceneManager.LoadScene("forgotpw2");
+            //SceneManager.LoadScene("resetpw");
+        });
     }
 
-    private string GetErrorMessage(AuthError errorCode)
+    public void UpdatePassword()
     {
-        switch (errorCode)
+        //string newPassword = newPassword.text;
+        FirebaseUser user = auth.CurrentUser;
+        if (user != null)
         {
-            case AuthError.MissingEmail:
-                return "Email is missing.";
-            case AuthError.MissingPassword:
-                return "Password is missing.";
-            default:
-                return "An unknown error occurred.";
+            user.UpdatePasswordAsync(newPassword.text).ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("UpdatePasswordAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("Error updating password: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("Password updated successfully.");
+                // Redirect the user to the login page
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Login");
+            });
         }
     }
-        void forgetPasswordSubmit(string forgetPasswordEmail){
-       auth.SendPasswordResetEmailAsync(forgetPasswordEmail).ContinueWithOnMainThread(task => {
-           if (task.IsCanceled)
-      {
-                            Debug.LogError("SendPasswordResetEmailAsync was canceled.");
-                     return;
-                 }
-                if (task.IsFaulted)
-                 {
-                   foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
-                    {
-                         Firebase.FirebaseException firebaseEx = exception as FirebaseException;
-                         if (firebaseEx != null)
-                        {
-                             // Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                             // logText.text = firebaseEx.Message;
-                             var errorCode=(AuthError)firebaseEx.ErrorCode;
-                             showNotificationMessage("Error",GetErrorMessage(errorCode));
-                         }
-                     }
-                 }
-                 Debug.Log("Password reset email sent successfully.");
-                 showNotificationMessage("Success","Password reset email sent successfully.");
-             });
-         }
-         public void OnClickForgetPassword()
-{
-         // Get the user's email address from the email input field.
-     string forgetPasswordEmail = email.text;
-     // Call the forgetPasswordSubmit method with the user's email address.
-     forgetPasswordSubmit(forgetPasswordEmail);
- }
 
-     }
+
+
+
+
+}
+    // private void showNotificationMessage(string title, string message){
+    //     Debug.Log($"{title}: {message}");
+    // }
+
+//     private string GetErrorMessage(AuthError errorCode)
+//     {
+//         switch (errorCode)
+//         {
+//             case AuthError.MissingEmail:
+//                 return "Email is missing.";
+//             case AuthError.MissingPassword:
+//                 return "Password is missing.";
+//             default:
+//                 return "An unknown error occurred.";
+//         }
+//     }
+//         void forgetPasswordSubmit(string forgetPasswordEmail){
+//        auth.SendPasswordResetEmailAsync(forgetPasswordEmail).ContinueWithOnMainThread(task => {
+//            if (task.IsCanceled)
+//       {
+//                             Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+//                      return;
+//                  }
+//                 if (task.IsFaulted)
+//                  {
+//                    foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+//                     {
+//                          Firebase.FirebaseException firebaseEx = exception as FirebaseException;
+//                          if (firebaseEx != null)
+//                         {
+//                              // Debug.LogError($"Error code: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
+//                              // logText.text = firebaseEx.Message;
+//                              var errorCode=(AuthError)firebaseEx.ErrorCode;
+//                              showNotificationMessage("Error",GetErrorMessage(errorCode));
+//                          }
+//                      }
+//                  }
+//                  Debug.Log("Password reset email sent successfully.");
+//                  showNotificationMessage("Success","Password reset email sent successfully.");
+//              });
+//          }
+//          public void OnClickForgetPassword()
+// {
+//          // Get the user's email address from the email input field.
+//      string forgetPasswordEmail = email.text;
+//      // Call the forgetPasswordSubmit method with the user's email address.
+//      forgetPasswordSubmit(forgetPasswordEmail);
+//  }
+
+//      }
      
      
 

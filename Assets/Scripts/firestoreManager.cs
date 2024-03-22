@@ -17,7 +17,7 @@ public class FirestoreManager
     public void StoreUserData(User user)
     {
         // Assuming you want to store user data in a collection named "users"
-        CollectionReference usersCollection = db.Collection("YOUR_COLLECTION_NAME");
+        CollectionReference usersCollection = db.Collection("User_Details");
 
         // Convert the User object to a dictionary
         Dictionary<string, object> userData = new Dictionary<string, object>
@@ -27,6 +27,7 @@ public class FirestoreManager
             { "email", user.Email }
             // Add more fields if needed
         };
+    
 
         // Add the user data to the Firestore collection
         usersCollection.AddAsync(userData)
@@ -41,5 +42,6 @@ public class FirestoreManager
                     Debug.Log("User data stored successfully in Firestore.");
                 }
             });
+        
     }
 }
