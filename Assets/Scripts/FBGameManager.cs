@@ -152,7 +152,7 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "newplayer";
+        userID = "trynew";
 
         gameID = "gameid";
         GameUtils gameUtils = new GameUtils();
@@ -160,7 +160,6 @@ public class FBGameManager : MonoBehaviour
         int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = FBTimerManager.Instance.GetElapsedTime();
         gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
-        retrieveData.RetrieveGameDataFromFirestore(userID, gameID);
     }
 
     public void Pause()

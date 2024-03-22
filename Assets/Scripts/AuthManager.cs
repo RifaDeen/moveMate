@@ -216,6 +216,12 @@ public class AuthManager : MonoBehaviour
         });
     }
     }
+
+    public void OnClickLogout(){
+        Debug.Log("Logout button clicked");
+        auth.SignOut();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Login");
+    }
     
     void AuthStateChanged(object sender, System.EventArgs eventArgs) {
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;

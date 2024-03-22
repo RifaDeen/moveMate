@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RetrieveData {
+public class RetrieveData
+{
 
     //stroring dictionary in a dictionary -  { "flappy_bird" : [(score, time)], "dino_game" : [(score, time)]}
     Dictionary<string, List<(int score, float time)>> gameDataDictionary = new Dictionary<string, List<(int score, float time)>>();
@@ -55,107 +56,108 @@ public class RetrieveData {
 
     // }
 
-    public IEnumerator RetrieveGameDataFromFirestore(string userId, string gameId)
-{
-    FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-
-    CollectionReference gameInstancesRef = db.Collection("users").Document(userId)
-        .Collection("game_history").Document(gameId).Collection("game_instances");
-
-    var task = gameInstancesRef.GetSnapshotAsync();
-
-    yield return new WaitUntil(() => task.IsCompleted);
-
-    if (task.IsFaulted)
+    public IEnumerator RetrieveGameData(string userId, string gameId)
     {
-        UnityEngine.Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
-        yield break;
-    }
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
-    List<(int score, float time)> scoreTimeDict = new List<(int score, float time)>();
+        CollectionReference gameInstancesRef = db.Collection("users").Document(userId)
+            .Collection("game_history").Document(gameId).Collection("game_instances");
 
-    foreach (DocumentSnapshot document in task.Result.Documents)
-    {
-        Dictionary<string, object> gameData = document.ToDictionary();
+        var task = gameInstancesRef.GetSnapshotAsync();
 
-        if (gameData.TryGetValue("score", out object scoreObj) && gameData.TryGetValue("Time", out object timeObj))
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        if (task.IsFaulted)
         {
-            int score = Convert.ToInt32(scoreObj);
-            float time = Convert.ToSingle(timeObj);
-            scoreTimeDict.Add((score, time));
-            Debug.Log("Score: " + score + ", Time: " + time);
-        }
-    }
-
-    Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
-    gameDataDictionary[gameId] = scoreTimeDict;
-}
-
-
-    //calculate total score for all games
-     public int CalculateTotalScore()
-    {
-        Debug.Log("task 2");
-        int totalScore = 0;
-        int scoreCount =0;
-        foreach (var scoreTimeDict in gameDataDictionary.Values)
-        {   
-            UnityEngine.Debug.Log("score and time " + scoreTimeDict);
-            foreach (var scoreVal in scoreTimeDict)
-            {   
-                UnityEngine.Debug.Log("Score: " + scoreVal.score);
-                totalScore += scoreVal.score;
-                scoreCount++;
-            }
+            UnityEngine.Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
+            yield break;
         }
 
-        UnityEngine.Debug.Log("Total Score: " + totalScore + ", Score Count: " + scoreCount);
-        return totalScore;
+        List<(int score, float time)> scoreTimeDict = new List<(int score, float time)>();
 
-    }
-
-    //cal total time for all
-    public float CalculateTotalTime()
-    {
-        float totalTime = 0;
-        int timeCount = 0;
-        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        foreach (DocumentSnapshot document in task.Result.Documents)
         {
-            foreach (var timeValue in scoreTimeDict)
+            Dictionary<string, object> gameData = document.ToDictionary();
+
+            if (gameData.TryGetValue("score", out object scoreObj) && gameData.TryGetValue("Time", out object timeObj))
             {
-                totalTime += timeValue.time;
-                timeCount++;
+                int score = Convert.ToInt32(scoreObj);
+                float time = Convert.ToSingle(timeObj);
+                scoreTimeDict.Add((score, time));
+                Debug.Log("Score: " + score + ", Time: " + time);
             }
         }
 
-        UnityEngine. Debug.Log("Total Time: " + totalTime + ", Time Count: " + timeCount);
-        return totalTime;
+        Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
+        gameDataDictionary[gameId] = scoreTimeDict;
     }
+    Dictionary<string, List<(int score, float time, DateTime date)>> gameDataDictionaryWithDate = new Dictionary<string, List<(int score, float time, DateTime date)>>();
+    public IEnumerator RetrieveGameDataByDate(string userId, string gameId, DateTime specificDate)
+    {
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+
+        CollectionReference gameInstancesRef = db.Collection("users").Document(userId)
+            .Collection("game_history").Document(gameId).Collection("game_instances");
+
+        Query gameInstancesQuery = gameInstancesRef.WhereEqualTo("date", specificDate.Date);
+
+        var task = gameInstancesQuery.GetSnapshotAsync();
+
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        if (task.IsFaulted)
+        {
+            UnityEngine.Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
+            yield break;
+        }
+
+        List<(int score, float time, DateTime date)> scoreTimeDateList = new List<(int score, float time, DateTime date)>();
+
+        foreach (DocumentSnapshot document in task.Result.Documents)
+        {
+            Dictionary<string, object> gameData = document.ToDictionary();
+
+            if (gameData.TryGetValue("score", out object scoreObj) && gameData.TryGetValue("Time", out object timeObj) && gameData.TryGetValue("date", out object dateObj))
+            {
+                int score = Convert.ToInt32(scoreObj);
+                float time = Convert.ToSingle(timeObj);
+                DateTime date = (DateTime)dateObj;
+
+                scoreTimeDateList.Add((score, time, date));
+                Debug.Log("Score: " + score + ", Time: " + time + ", Date: " + date);
+            }
+        }
+
+        Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
+        gameDataDictionaryWithDate[gameId] = scoreTimeDateList;
+    }
+
 
     public void PrintGameDataDictionary()
     {
-        
+
         UnityEngine.Debug.Log("print function running");
         foreach (var gameData in gameDataDictionary)
         {
-        string gameId = gameData.Key;
-        var scoreTimeList = gameData.Value;
+            string gameId = gameData.Key;
+            var scoreTimeList = gameData.Value;
 
-        foreach (var st in scoreTimeList)
-        {
-            UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
-        }
+            foreach (var st in scoreTimeList)
+            {
+                UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
+            }
         }
     }
 
-    public List<int> scoreList(){
+    public List<int> scoreList()
+    {
         List<int> listscore = new List<int>();
 
         foreach (var scoreTimeDict in gameDataDictionary.Values)
-        {   
+        {
             foreach (var scoreVal in scoreTimeDict)
-            {   
-               listscore.Add(scoreVal.score);
+            {
+                listscore.Add(scoreVal.score);
             }
         }
         return listscore;
@@ -163,25 +165,56 @@ public class RetrieveData {
 
 
 
-     public List<float> timeList(){
+    public List<float> timeList()
+    {
 
         List<float> listtime = new List<float>();
 
         foreach (var scoreTimeDict in gameDataDictionary.Values)
-        {   
+        {
             foreach (var timeValue in scoreTimeDict)
             {
-               listtime.Add(timeValue.time);
+                listtime.Add(timeValue.time);
+            }
+        }
+        return listtime;
+    }
+    public List<int> scoreListToday()
+    {
+        List<int> listscore = new List<int>();
+
+        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        {
+            foreach (var scoreVal in scoreTimeDict)
+            {
+                listscore.Add(scoreVal.score);
+            }
+        }
+        return listscore;
+    }
+
+
+
+    public List<float> timeListToday()
+    {
+
+        List<float> listtime = new List<float>();
+
+        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        {
+            foreach (var timeValue in scoreTimeDict)
+            {
+                listtime.Add(timeValue.time);
             }
         }
         return listtime;
     }
 
     public void PrintList(List<int> list)
-{
-    foreach (int item in list)
     {
-        Debug.Log("score is " + item);
+        foreach (int item in list)
+        {
+            Debug.Log("score is " + item);
+        }
     }
-}
 }
