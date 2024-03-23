@@ -152,7 +152,7 @@ public class FBGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "trynew";
+        userID = "progress";
 
         gameID = "gameid";
         GameUtils gameUtils = new GameUtils();

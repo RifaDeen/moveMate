@@ -11,6 +11,11 @@ public class radialProgress : MonoBehaviour
     [SerializeField] float speed;
     float currentValue = 0f;
 
+    public void UpdateProgress(float progress)
+    {
+        currentValue = progress;
+    }
+
     void Update()
     {
         if (currentValue<100)
@@ -25,5 +30,3 @@ public class radialProgress : MonoBehaviour
         image.fillAmount = currentValue / 100;
     }
 }
-
-// hand movement cal

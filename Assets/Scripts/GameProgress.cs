@@ -14,11 +14,17 @@ public class GameProgress : MonoBehaviour
 
     [SerializeField] private TMP_Text todayTime; //total time spent
     [SerializeField] private TMP_Text timeUnit;
+    private float gameprogressToday ;
 
     RetrieveData retrieveData = new RetrieveData(); //retrieve data from the database
     private string userID;
 
     private string gameID;
+
+    //radial progress bar
+    [SerializeField] TextMeshProUGUI Radtext;
+    [SerializeField] Image image;
+    [SerializeField] float speed;
 
     void Start()
     {
@@ -29,7 +35,7 @@ public class GameProgress : MonoBehaviour
     //overall game progress from all time and score 
     private IEnumerator CalculategameProgress()
     {
-        userID = "newplayer"; //hardcoded user id
+        userID = "progress"; //hardcoded user id
         gameID = "gameid"; //gameid same for all games, to get the data of all games
         yield return StartCoroutine(retrieveData.RetrieveGameData(userID, gameID));
 
@@ -41,8 +47,8 @@ public class GameProgress : MonoBehaviour
         float avgTime = CalAvgTime(timelist);
         Debug.Log("Average Time: " + avgTime);
 
-        float scorePercentage = (avgScore / 500) * 100;
-        float timePercentage = (avgTime / 24 * 3600) * 100;
+        float scorePercentage = (avgScore / 200) * 100;
+        float timePercentage = (avgTime / 100) * 100;
 
         // Calculate the overall progress
         float gameprogress = (float)Math.Round((scorePercentage + timePercentage) / 2);
@@ -51,12 +57,14 @@ public class GameProgress : MonoBehaviour
     }
 
     private IEnumerator calTodayProgress()
-    {
-        userID = "newplayer";
+    {   
+        gameprogressToday =0;
+        userID = "progress";
         gameID = "gameid";
-        DateTime today = DateTime.Today;
+        DateTime utcNow = DateTime.UtcNow;
+        DateTime todayUtc = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
 
-        yield return StartCoroutine(retrieveData.RetrieveGameDataByDate(userID, gameID, today));
+        yield return StartCoroutine(retrieveData.RetrieveGameDataByDate(userID, gameID, todayUtc));
         List<int> scorelist = retrieveData.ScoreListToday();
         List<float> timelist = retrieveData.TimeListToday();
 
@@ -75,10 +83,26 @@ public class GameProgress : MonoBehaviour
         float timePercentage = (avgTime / 1800) * 100;
 
         // Calculate the overall progress of today
-        float gameprogressToday = (float)Math.Round((scorePercentage + timePercentage) / 2);
+        gameprogressToday = (float)Math.Round((scorePercentage + timePercentage) / 2);
 
         todayProgress.text = gameprogressToday.ToString();
         todayTime.text = FormatTime(totTimeinSec);
+
+        
+        if (gameprogressToday == 0)
+        {
+            Radtext.text = "0%";
+        }
+        else if (gameprogressToday < 100)
+        {
+            gameprogressToday += speed * Time.deltaTime;
+            Radtext.text = ((int)gameprogressToday).ToString() + "%";
+        }
+        else
+        {
+            Radtext.text = "100%";
+        }
+        image.fillAmount = gameprogressToday / 100;
 
     }
 

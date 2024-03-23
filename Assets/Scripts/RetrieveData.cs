@@ -91,6 +91,9 @@ public class RetrieveData
         Debug.Log("Number of documents retrieved: " + task.Result.Documents.Count());
         gameDataDictionary[gameId] = scoreTimeDict;
     }
+   
+   
+   
     Dictionary<string, List<(int score, float time, DateTime date)>> gameDataDictionaryWithDate = new Dictionary<string, List<(int score, float time, DateTime date)>>();
     public IEnumerator RetrieveGameDataByDate(string userId, string gameId, DateTime specificDate)
     {
@@ -107,7 +110,7 @@ public class RetrieveData
 
         if (task.IsFaulted)
         {
-            UnityEngine.Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
+            Debug.Log("Failed to retrieve game data from Firestore: " + task.Exception);
             yield break;
         }
 
@@ -121,7 +124,8 @@ public class RetrieveData
             {
                 int score = Convert.ToInt32(scoreObj);
                 float time = Convert.ToSingle(timeObj);
-                DateTime date = (DateTime)dateObj;
+                Timestamp timestamp = (Timestamp)dateObj;
+                DateTime date = timestamp.ToDateTime();
 
                 scoreTimeDateList.Add((score, time, date));
                 Debug.Log("Score: " + score + ", Time: " + time + ", Date: " + date);

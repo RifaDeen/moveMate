@@ -17,6 +17,10 @@ public class GameUtils
 
     public void SaveGameDataToFirestore(string userId, string gameId, string gameInstanceId, int score, float time)
     {
+        DateTime utcNow = DateTime.UtcNow;
+        DateTime todayUtc = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
+
+        // Save todayUtc to Firestore
         FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
         DocumentReference gameHistoryRef = db.Collection("users").Document(userId)
@@ -26,7 +30,7 @@ public class GameUtils
         {
             { "score", score },
             {"Time", time},
-            { "date", DateTime.UtcNow } // Store the current date
+            { "date", todayUtc} // Store the current date
         };
 
         gameHistoryRef.SetAsync(gameData).ContinueWithOnMainThread(task =>

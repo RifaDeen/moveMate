@@ -177,7 +177,7 @@ public class dinoGameManager : MonoBehaviour
         //     Debug.LogError("User object is null");
         // }
 
-        userID = "newplayer";
+        userID = "progress";
 
         gameID = "gameid";
         GameUtils gameUtils = new GameUtils();
