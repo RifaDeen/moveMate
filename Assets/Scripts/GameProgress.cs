@@ -14,7 +14,8 @@ public class GameProgress : MonoBehaviour
 
     [SerializeField] private TMP_Text todayTime; //total time spent
     [SerializeField] private TMP_Text timeUnit;
-    public float gameprogressToday { get; private set; }
+    [SerializeField] TextMeshProUGUI levelText;
+    private float gameprogressToday;
 
     RetrieveData retrieveData = new RetrieveData(); //retrieve data from the database
     private string userID;
@@ -54,6 +55,8 @@ public class GameProgress : MonoBehaviour
         float gameprogress = (float)Math.Round((scorePercentage + timePercentage) / 2);
 
         progressText.text = gameprogress.ToString();
+
+        calculateRank(gameprogress);
     }
 
     public IEnumerator calTodayProgress()
@@ -174,6 +177,34 @@ public class GameProgress : MonoBehaviour
         {
             timeUnit.text = "hr";
             return Math.Round(totalSeconds / 3600).ToString(); // 60 minutes * 60 seconds
+        }
+    }
+
+    private void calculateRank(float progress)
+    {
+        if (progress < 20)
+        {
+            levelText.text = "Rookie";
+        }
+        else if (progress < 40)
+        {
+            levelText.text = "Amateur";
+        }
+        else if (progress < 60)
+        {
+            levelText.text = "Intermediate";
+        }
+        else if (progress < 80)
+        {
+            levelText.text = "Advanced";
+        } 
+        else if (progress < 90)
+        {
+            levelText.text = "Expert";
+        }
+        else
+        {
+            levelText.text = "Master";
         }
     }
 
