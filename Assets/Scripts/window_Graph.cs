@@ -10,6 +10,8 @@ public class window_Graph : MonoBehaviour
     private RectTransform graphContainer;
     private const int MAX_SCORE = 100;
     private Color pointColor = new Color32(116, 64, 222, 255); // Set the color of the points
+    private User user;
+    private string userID;
     
     private void Awake()
 {
@@ -31,8 +33,19 @@ private void AddScore(int score, List<int> scoreList)
     }
 }
     private IEnumerator RetrieveAndShowGraphAsync()     {
+      
+        if (AuthManager.CurrentUser != null)
+        {
+            userID = AuthManager.CurrentUser.UserId;
+            Debug.Log("User ID obtained from user object: " + userID);
+        }
+        else
+        {
+            Debug.LogError("User object is null");
+        }
+        
          RetrieveData retrieveData = new RetrieveData();
-         yield return retrieveData.RetrieveGameData("progress", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
+         yield return retrieveData.RetrieveGameData(userID, "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
         //  List<int> valueList = retrieveData.scoreList();
          List<int> valueList = new List<int>();
             foreach (int score in retrieveData.scoreList())
