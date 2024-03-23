@@ -32,7 +32,7 @@ private void AddScore(int score, List<int> scoreList)
 }
     private IEnumerator RetrieveAndShowGraphAsync()     {
          RetrieveData retrieveData = new RetrieveData();
-         yield return retrieveData.RetrieveGameData("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
+         yield return retrieveData.RetrieveGameData("progress", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
         //  List<int> valueList = retrieveData.scoreList();
          List<int> valueList = new List<int>();
             foreach (int score in retrieveData.scoreList())
@@ -71,7 +71,7 @@ private GameObject CreateCircle(Vector2 anchoredPosition) {
     GameObject gameObject = new GameObject("circle", typeof(Image), typeof(RectTransform));
     gameObject.transform.SetParent(graphContainer, false);
     gameObject.GetComponent<Image>().sprite = circleSprite; // Fix: Access the Image component and assign the circleSprite to its sprite property
-     gameObject.GetComponent<Image>().color = pointColor; // Set the color of the points
+    gameObject.GetComponent<Image>().color = pointColor; // Set the color of the points
     RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
     rectTransform.anchoredPosition = anchoredPosition;
     rectTransform.sizeDelta = new Vector2(11, 11);
