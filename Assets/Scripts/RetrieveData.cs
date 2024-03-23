@@ -132,23 +132,7 @@ public class RetrieveData
         gameDataDictionaryWithDate[gameId] = scoreTimeDateList;
     }
 
-
-    public void PrintGameDataDictionary()
-    {
-
-        UnityEngine.Debug.Log("print function running");
-        foreach (var gameData in gameDataDictionary)
-        {
-            string gameId = gameData.Key;
-            var scoreTimeList = gameData.Value;
-
-            foreach (var st in scoreTimeList)
-            {
-                UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
-            }
-        }
-    }
-
+    //print list of scores for debugging purposes
     public List<int> scoreList()
     {
         List<int> listscore = new List<int>();
@@ -164,7 +148,7 @@ public class RetrieveData
     }
 
 
-
+    //print list of time for debugging purposes
     public List<float> timeList()
     {
 
@@ -179,15 +163,15 @@ public class RetrieveData
         }
         return listtime;
     }
-    public List<int> scoreListToday()
+    public List<int> ScoreListToday()
     {
         List<int> listscore = new List<int>();
 
-        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        foreach (var gameData in gameDataDictionaryWithDate.Values)
         {
-            foreach (var scoreVal in scoreTimeDict)
+            foreach (var scoreTimeDate in gameData)
             {
-                listscore.Add(scoreVal.score);
+                listscore.Add(scoreTimeDate.score);
             }
         }
         return listscore;
@@ -195,16 +179,16 @@ public class RetrieveData
 
 
 
-    public List<float> timeListToday()
+    public List<float> TimeListToday()
     {
 
         List<float> listtime = new List<float>();
 
-        foreach (var scoreTimeDict in gameDataDictionary.Values)
+        foreach (var gameData in gameDataDictionaryWithDate.Values)
         {
-            foreach (var timeValue in scoreTimeDict)
+            foreach (var scoreTimeDate in gameData)
             {
-                listtime.Add(timeValue.time);
+                listtime.Add(scoreTimeDate.time);
             }
         }
         return listtime;
@@ -215,6 +199,22 @@ public class RetrieveData
         foreach (int item in list)
         {
             Debug.Log("score is " + item);
+        }
+    }
+
+    public void PrintGameDataDictionary()
+    {
+
+        UnityEngine.Debug.Log("print function running");
+        foreach (var gameData in gameDataDictionary)
+        {
+            string gameId = gameData.Key;
+            var scoreTimeList = gameData.Value;
+
+            foreach (var st in scoreTimeList)
+            {
+                UnityEngine.Debug.Log($"Game ID: {gameId}, Score: {st.score}, Time: {st.time}");
+            }
         }
     }
 }
