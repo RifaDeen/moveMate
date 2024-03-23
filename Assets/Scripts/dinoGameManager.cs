@@ -26,13 +26,13 @@ public class dinoGameManager : MonoBehaviour
     [SerializeField] private Button exitButton;
 
     [SerializeField] private Text score0Feedback;
+    [SerializeField] private Text score2Feedback;
+    [SerializeField] private Text score5Feedback;
+    [SerializeField] private Text score10Feedback;
     [SerializeField] private Text score20Feedback;
+    [SerializeField] private Text score30Feedback;
     [SerializeField] private Text score50Feedback;
-    [SerializeField] private Text score100Feedback;
-    [SerializeField] private Text score200Feedback;
-    [SerializeField] private Text score300Feedback;
-    [SerializeField] private Text score500Feedback;
-    [SerializeField] private Text score750Feedback;
+    [SerializeField] private Text score75Feedback;
 
     public dinoBackgroundMusic backgroundMusic;
     private DinoPlayer player;
@@ -76,13 +76,13 @@ public class dinoGameManager : MonoBehaviour
         exitButton.gameObject.SetActive(true);
 
         score0Feedback.gameObject.SetActive(true);
+        score2Feedback.gameObject.SetActive(false);
+        score5Feedback.gameObject.SetActive(false);
+        score10Feedback.gameObject.SetActive(false);
         score20Feedback.gameObject.SetActive(false);
+        score30Feedback.gameObject.SetActive(false);
         score50Feedback.gameObject.SetActive(false);
-        score100Feedback.gameObject.SetActive(false);
-        score200Feedback.gameObject.SetActive(false);
-        score300Feedback.gameObject.SetActive(false);
-        score500Feedback.gameObject.SetActive(false);
-        score750Feedback.gameObject.SetActive(false);
+        score75Feedback.gameObject.SetActive(false);
 
          // Find the dinoBackgroundMusic object in the scene and get its component
         backgroundMusic = FindObjectOfType<dinoBackgroundMusic>();
@@ -224,40 +224,40 @@ public class dinoGameManager : MonoBehaviour
         {
             StartCoroutine(DisplayFeedback(score0Feedback));
         }
+        else if (intScore == 2)
+        {
+            StartCoroutine(DisplayFeedback(score2Feedback));
+        }
+        else if (intScore == 5)
+        {
+            StartCoroutine(DisplayFeedback(score5Feedback));
+        }
+        else if (intScore == 10)
+        {
+            StartCoroutine(DisplayFeedback(score10Feedback));
+        }
         else if (intScore == 20)
         {
             StartCoroutine(DisplayFeedback(score20Feedback));
+        }
+        else if (intScore == 30)
+        {
+            StartCoroutine(DisplayFeedback(score30Feedback));
         }
         else if (intScore == 50)
         {
             StartCoroutine(DisplayFeedback(score50Feedback));
         }
-        else if (intScore == 100)
+        else if (intScore == 75)
         {
-            StartCoroutine(DisplayFeedback(score100Feedback));
-        }
-        else if (intScore == 200)
-        {
-            StartCoroutine(DisplayFeedback(score200Feedback));
-        }
-        else if (intScore == 300)
-        {
-            StartCoroutine(DisplayFeedback(score300Feedback));
-        }
-        else if (intScore == 500)
-        {
-            StartCoroutine(DisplayFeedback(score500Feedback));
-        }
-        else if (intScore == 750)
-        {
-            StartCoroutine(DisplayFeedback(score750Feedback));
+            StartCoroutine(DisplayFeedback(score75Feedback));
         }
     }
 
     private System.Collections.IEnumerator DisplayFeedback(Text feedbackText)
     {
         feedbackText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3f);
         feedbackText.gameObject.SetActive(false);
     }
 
