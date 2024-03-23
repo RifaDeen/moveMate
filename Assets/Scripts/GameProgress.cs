@@ -14,7 +14,7 @@ public class GameProgress : MonoBehaviour
 
     [SerializeField] private TMP_Text todayTime; //total time spent
     [SerializeField] private TMP_Text timeUnit;
-    private float gameprogressToday ;
+    public float gameprogressToday { get; private set; }
 
     RetrieveData retrieveData = new RetrieveData(); //retrieve data from the database
     private string userID;
@@ -56,9 +56,9 @@ public class GameProgress : MonoBehaviour
         progressText.text = gameprogress.ToString();
     }
 
-    private IEnumerator calTodayProgress()
-    {   
-        gameprogressToday =0;
+    public IEnumerator calTodayProgress()
+    {
+        gameprogressToday = 0;
         userID = "progress";
         gameID = "gameid";
         DateTime utcNow = DateTime.UtcNow;
@@ -88,7 +88,7 @@ public class GameProgress : MonoBehaviour
         todayProgress.text = gameprogressToday.ToString();
         todayTime.text = FormatTime(totTimeinSec);
 
-        
+
         if (gameprogressToday == 0)
         {
             Radtext.text = "0%";
@@ -158,7 +158,7 @@ public class GameProgress : MonoBehaviour
     }
 
     //ui formatting for time
-    public string FormatTime(float totalSeconds)
+    private string FormatTime(float totalSeconds)
     {
         if (totalSeconds < 60)
         {

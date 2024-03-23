@@ -11,11 +11,6 @@ public class radialProgress : MonoBehaviour
     [SerializeField] float speed;
     float currentValue = 0f;
 
-    public void UpdateProgress(float progress)
-    {
-        currentValue = progress;
-    }
-
     void Update()
     {
         if (currentValue<100)
