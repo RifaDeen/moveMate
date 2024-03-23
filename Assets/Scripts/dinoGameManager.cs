@@ -67,6 +67,7 @@ public class dinoGameManager : MonoBehaviour
     {
         player = FindObjectOfType<DinoPlayer>();
         spawner = FindObjectOfType<dinoSpawner>();
+        score = 0f;
 
         // Show "Get Ready" text and retry button initially
         getReadyText.gameObject.SetActive(true);
@@ -119,6 +120,7 @@ public class dinoGameManager : MonoBehaviour
         }
 
         score = 0f;
+        scoreText.text = "000"; // Reset score text to 0
         gameSpeed = initialGameSpeed;
         enabled = true;
 
@@ -134,6 +136,7 @@ public class dinoGameManager : MonoBehaviour
         retryButton.gameObject.SetActive(false);
         exitButton.gameObject.SetActive(false);
         getReadyText.gameObject.SetActive(false);
+        score0Feedback.gameObject.SetActive(false);
 
         // Enable retry button for the next game
         retryButton.interactable = true;
@@ -257,7 +260,7 @@ public class dinoGameManager : MonoBehaviour
     private System.Collections.IEnumerator DisplayFeedback(Text feedbackText)
     {
         feedbackText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(4f);
         feedbackText.gameObject.SetActive(false);
     }
 
