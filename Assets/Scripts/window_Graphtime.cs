@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class window_Graph : MonoBehaviour
+public class window_Graphtime : MonoBehaviour
 {
     [SerializeField] private Sprite circleSprite;
     private RectTransform graphContainer;
-    private const int MAX_SCORE = 100;
-     private Color pointColor = Color.red; // Set the color of the points
+     private const int MAX_TIME = 1000;
     
     private void Awake()
 {
@@ -17,16 +16,15 @@ graphContainer = transform.Find("ScrollView/graphContainer").GetComponent<RectTr
 graphContainer.pivot = new Vector2(0, 0.5f); // Set the pivot to expand to the right
 CreateAxisLines();
 StartCoroutine(RetrieveAndShowGraphAsync());
-}
-private void AddScore(int score, List<int> scoreList)
-{
-    if(score > MAX_SCORE)
+} private void AddTime(int time, List<int> timeList)
+ {
+    if(time > MAX_TIME)
+     {
+         timeList.Add(MAX_TIME);
+     }
+     else
     {
-        scoreList.Add(MAX_SCORE);
-    }
-    else
-    {
-        scoreList.Add(score);
+             timeList.Add(time);
     }
 }
     private IEnumerator RetrieveAndShowGraphAsync()     {
@@ -34,9 +32,9 @@ private void AddScore(int score, List<int> scoreList)
          yield return retrieveData.RetrieveGameData("newplayer", "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator
         //  List<int> valueList = retrieveData.scoreList();
          List<int> valueList = new List<int>();
-            foreach (int score in retrieveData.scoreList())
+            foreach (int score in retrieveData.timeList())
             {
-                AddScore(score, valueList);
+                AddTime(score, valueList);
             }
                 ShowGraph(valueList);
         }
@@ -70,7 +68,6 @@ private GameObject CreateCircle(Vector2 anchoredPosition) {
     GameObject gameObject = new GameObject("circle", typeof(Image), typeof(RectTransform));
     gameObject.transform.SetParent(graphContainer, false);
     gameObject.GetComponent<Image>().sprite = circleSprite; // Fix: Access the Image component and assign the circleSprite to its sprite property
-     gameObject.GetComponent<Image>().color = pointColor; // Set the color of the points
     RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
     rectTransform.anchoredPosition = anchoredPosition;
     rectTransform.sizeDelta = new Vector2(11, 11);
