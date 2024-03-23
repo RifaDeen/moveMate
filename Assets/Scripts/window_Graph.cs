@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class window_Graph : MonoBehaviour
 {
     [SerializeField] private Sprite circleSprite;
+    [SerializeField] private GameObject tooltip;
     private RectTransform graphContainer;
     private const int MAX_SCORE = 100;
-     private Color pointColor = Color.red; // Set the color of the points
+    private Color pointColor = new Color32(116, 64, 222, 255); // Set the color of the points
     
     private void Awake()
 {
@@ -104,6 +105,8 @@ private void ShowGraph(List<int> valueList){
         float xPosition = (i+1)+ i * xsize; //
         float yPosition = (valueList[i] / ymaximum) * graphHeight;
         GameObject circleGameObject=CreateCircle(new Vector2(xPosition, yPosition));
+
+        
         if(lastCircleGameObject!=null){
             CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition);
         }
