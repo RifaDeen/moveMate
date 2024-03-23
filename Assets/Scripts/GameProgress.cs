@@ -38,11 +38,11 @@ public class GameProgress : MonoBehaviour
 
         float avgScore = calAvgScore(scorelist);
         Debug.Log("Average Score: " + avgScore);
-        float avgTime = calAvgTime(timelist);
+        float avgTime = CalAvgTime(timelist);
         Debug.Log("Average Time: " + avgTime);
 
-        float scorePercentage = (avgScore / 100) * 100;
-        float timePercentage = (avgTime / 100) * 100;
+        float scorePercentage = (avgScore / 500) * 100;
+        float timePercentage = (avgTime / 24 * 3600) * 100;
 
         // Calculate the overall progress
         float gameprogress = (float)Math.Round((scorePercentage + timePercentage) / 2);
@@ -64,15 +64,15 @@ public class GameProgress : MonoBehaviour
 
         float avgScore = calAvgScore(scorelist);
         Debug.Log("Average Score: " + avgScore);
-        float avgTime = calAvgTime(timelist);
+        float avgTime = CalAvgTime(timelist);
         Debug.Log("Average Time: " + avgTime);
         float totTimeinSec = CalTime(timelist);
 
         //default goal for user
-        //for score = 30 points per day
+        //for score = 150 points per day
         //time = 1800s / half an hour per day
-        float scorePercentage = (avgScore / 30) * 100;
-        float timePercentage = (avgTime / 50) * 100;
+        float scorePercentage = (avgScore / 150) * 100;
+        float timePercentage = (avgTime / 1800) * 100;
 
         // Calculate the overall progress of today
         float gameprogressToday = (float)Math.Round((scorePercentage + timePercentage) / 2);
@@ -95,7 +95,7 @@ public class GameProgress : MonoBehaviour
     }
 
     //function that calculates average time
-    public float calAvgTime(List<float> list)
+    public float CalAvgTime(List<float> list)
     {
         int sum = 0;
         foreach (int time in list)
