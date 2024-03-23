@@ -1,0 +1,70 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+// Android Resolver Dependencies Start
+    implementation 'com.google.android.gms:play-services-base:18.3.0' // Assets/Firebase/Editor/AppDependencies.xml:17
+    implementation 'com.google.firebase:firebase-analytics:21.5.0' // Assets/Firebase/Editor/FirestoreDependencies.xml:15
+    implementation 'com.google.firebase:firebase-app-unity:11.7.0' // Assets/Firebase/Editor/AppDependencies.xml:22
+    implementation 'com.google.firebase:firebase-auth:22.3.1' // Assets/Firebase/Editor/AuthDependencies.xml:13
+    implementation 'com.google.firebase:firebase-auth-unity:11.7.0' // Assets/Firebase/Editor/AuthDependencies.xml:20
+    implementation 'com.google.firebase:firebase-common:20.4.2' // Assets/Firebase/Editor/AppDependencies.xml:13
+    implementation 'com.google.firebase:firebase-firestore:24.10.1' // Assets/Firebase/Editor/FirestoreDependencies.xml:13
+    implementation 'com.google.firebase:firebase-firestore-unity:11.7.0' // Assets/Firebase/Editor/FirestoreDependencies.xml:20
+
+// Android Resolver Dependencies End
+    implementation(name: 'mediapipe_android', ext:'aar')
+    implementation(name: 'UnityAds', ext:'aar')
+    implementation(name: 'common', ext:'aar')
+    implementation(name: 'billing-5.1.0', ext:'aar')
+    implementation project('mobilenotifications.androidlib')
+    implementation project('FirebaseApp.androidlib')
+}
+
+// Android Resolver Exclusions Start
+android {
+  packagingOptions {
+      exclude ('/lib/arm64-v8a/*' + '*')
+      exclude ('/lib/armeabi/*' + '*')
+      exclude ('/lib/mips/*' + '*')
+      exclude ('/lib/mips64/*' + '*')
+      exclude ('/lib/x86/*' + '*')
+      exclude ('/lib/x86_64/*' + '*')
+  }
+}
+// Android Resolver Exclusions End
+android {
+    ndkPath "C:/Program Files/Unity/Hub/Editor/2022.3.22f1/Editor/Data/PlaybackEngines/AndroidPlayer/NDK"
+
+    compileSdkVersion 30
+    buildToolsVersion '32.0.0'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    defaultConfig {
+        minSdkVersion 27
+        targetSdkVersion 30
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+        versionCode 1
+        versionName '1.0'
+        consumerProguardFiles 'proguard-unity.txt'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    aaptOptions {
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+    packagingOptions {
+        doNotStrip '*/armeabi-v7a/*.so'
+    }
+    
+}
