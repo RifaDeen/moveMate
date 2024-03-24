@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/appDev/Login.unity
+    guid: 416832fd7cbf44c669366617bab07cd2
+  - enabled: 1
+    path: Assets/Scenes/appDev/signup.unity
+    guid: dfb4b1ad2a0cd4151b587059380a0c56
+  - enabled: 1
+    path: Assets/Scenes/appDev/forgotpw1.unity
+    guid: fd559b5516d4a44b7865e88f0b1e0694
+  - enabled: 1
+    path: Assets/Scenes/appDev/forgotpw2.unity
+    guid: b36680375ac1447a0a0a4a34b39907d8
+  - enabled: 1
+    path: Assets/Scenes/appDev/resetpw.unity
+    guid: 6f7040ff53b8a294eb1116d9a2fef14e
+  - enabled: 1
+    path: Assets/Scenes/appDev/homepage.unity
+    guid: 03553a521389e43c6a961d7fd5e366b4
+  - enabled: 1
+    path: Assets/Scenes/appDev/gamePage.unity
+    guid: 0ee660b92560b4fa38ea30b3ce630ee7
+  - enabled: 1
+    path: Assets/Scenes/appDev/easy.unity
+    guid: a7743253b820d400b838cd509843f64a
+  - enabled: 1
+    path: Assets/Scenes/appDev/inter.unity
+    guid: b4b987178928345dbb3330839ab784ef
+  - enabled: 1
+    path: Assets/Scenes/appDev/hard.unity
+    guid: bc52f494fdb144faa9b1626276f87b24
+  - enabled: 1
+    path: Assets/Scenes/appDev/flappybird.unity
+    guid: e22800dd6212a4fa9b48ef0e0e657ff3
+  - enabled: 1
+    path: Assets/Scenes/appDev/boxgame.unity
+    guid: bc58ebea317604dc8a5a2c3dc8739b65
+  - enabled: 1
+    path: Assets/Scenes/appDev/coronagame.unity
+    guid: 77b2d4fa154974958a31b001b40ee6b1
+  - enabled: 1
+    path: Assets/Scenes/appDev/dinogame.unity
+    guid: 9d4674855c8484d9e8438268266ab407
+  - enabled: 1
+    path: Assets/Scenes/appDev/progress.unity
+    guid: a18094ada79f749c08cf0c3bf10a29df
+  - enabled: 1
+    path: Assets/Scenes/appDev/graphscore.unity
+    guid: 7cd1b6acb8c9446aa95275ce4809c2d6
+  - enabled: 1
+    path: Assets/Scenes/appDev/morepage.unity
+    guid: 736cad12b311044de86e9da5a7bd9705
+  - enabled: 1
+    path: Assets/MediaPipeUnity/Samples/Scenes/coronaHandTracking/CoronaHandTracking.unity
+    guid: 2a8ffbb84dc53486b99c301db172147f
+  - enabled: 1
+    path: Assets/MediaPipeUnity/Samples/Scenes/FBHand Tracking/FLAPPYBGAME.unity
+    guid: 08035b20d3836a599ad2fd3d81e41ee5
+  - enabled: 1
+    path: Assets/MediaPipeUnity/Samples/Scenes/Hand Tracking/dinoHandTracking.unity
+    guid: 2fa896f24394849b58928f7f32a67723
+  - enabled: 1
+    path: Assets/Scenes/appDev/graphtime.unity
+    guid: 1d8e8275adbdf4f7ca9e381e35b840af
+  - enabled: 1
+    path: Assets/Scenes/appDev/coronagamestrt.unity
+    guid: 48ba3c5a1d6284b4b84aa0c7a9bf38c6
+  m_configObjects:
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: c28d4e2ffc9c3a24fae589ef0a8a061e, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 5423f2d1fa1b348bb8bc8a051bbf7cce, type: 2}
