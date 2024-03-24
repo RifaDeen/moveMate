@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class radialProgress : MonoBehaviour
 {
+
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] Image image;
     [SerializeField] float speed;

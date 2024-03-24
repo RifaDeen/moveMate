@@ -74,7 +74,6 @@ public class GameProgress : MonoBehaviour
     public IEnumerator calTodayProgress()
     {
         gameprogressToday = 0;
-
       
         if (AuthManager.CurrentUser != null)
         {
@@ -113,7 +112,6 @@ public class GameProgress : MonoBehaviour
 
         todayProgress.text = gameprogressToday.ToString();
         todayTime.text = FormatTime(totTimeinSec);
-
 
         if (gameprogressToday == 0)
         {
