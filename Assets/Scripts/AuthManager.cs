@@ -18,7 +18,7 @@ public class AuthManager : MonoBehaviour
 {
     public Text logText;
     public TextMeshProUGUI username, email, password, forgetEmail, newPassword;
-    public UnityEngine.UI.Button signupButton; // Specify the namespace for Button
+    //public UnityEngine.UI.Button signupButton; // Specify the namespace for Button
 
     public static User CurrentUser { get; private set;}
 

@@ -15,10 +15,5 @@ void Update()
     }
 }
 
-    public void gameRouting(){
-         Debug.Log("game clicked");
-         UnityEngine.SceneManagement.SceneManager.LoadScene("gamePage");
-
-    }
 
 }

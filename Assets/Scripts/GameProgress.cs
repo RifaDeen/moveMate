@@ -19,6 +19,7 @@ public class GameProgress : MonoBehaviour
 
     RetrieveData retrieveData = new RetrieveData(); //retrieve data from the database
     private string userID;
+    private User user;
 
     private string gameID;
 
@@ -35,8 +36,19 @@ public class GameProgress : MonoBehaviour
 
     //overall game progress from all time and score 
     private IEnumerator CalculategameProgress()
+    
     {
-        userID = "progress"; //hardcoded user id
+      
+        if (AuthManager.CurrentUser != null)
+        {
+            userID = AuthManager.CurrentUser.UserId;
+            Debug.Log("User ID obtained from user object: " + userID);
+        }
+        else
+        {
+            Debug.LogError("User object is null");
+        }
+
         gameID = "gameid"; //gameid same for all games, to get the data of all games
         yield return StartCoroutine(retrieveData.RetrieveGameData(userID, gameID));
 
@@ -62,7 +74,18 @@ public class GameProgress : MonoBehaviour
     public IEnumerator calTodayProgress()
     {
         gameprogressToday = 0;
-        userID = "progress";
+
+      
+        if (AuthManager.CurrentUser != null)
+        {
+            userID = AuthManager.CurrentUser.UserId;
+            Debug.Log("User ID obtained from user object: " + userID);
+        }
+        else
+        {
+            Debug.LogError("User object is null");
+        }
+        
         gameID = "gameid";
         DateTime utcNow = DateTime.UtcNow;
         DateTime todayUtc = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
