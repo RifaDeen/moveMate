@@ -31,6 +31,12 @@ public class BoxGameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         score = 0;
         timerManager.RestartTimer();
+
+        // Stop background music
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.StopMusic();
+        }
     }
 
     public void StartGame()

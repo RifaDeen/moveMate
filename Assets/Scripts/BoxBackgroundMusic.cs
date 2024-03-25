@@ -20,9 +20,6 @@ public class BoxBackgroundMusic : MonoBehaviour
             if (audioSource == null)
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
-                // Set your audio clip here
-                // audioSource.clip = /* Your AudioClip */;
-                // Other audio settings can be configured here
             }
         }
         else
