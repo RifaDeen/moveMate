@@ -13,6 +13,7 @@ public class BoxGameManager : MonoBehaviour
     public Text scoreText;
     public GameObject gameOverPanel;
     public piggy_TimerManager timerManager; // Reference to the TimerManager script
+    public BoxBackgroundMusic backgroundMusic;  
 
     private int score = 0;
     private bool gameStarted = false;
@@ -43,6 +44,10 @@ public class BoxGameManager : MonoBehaviour
         scoreText.gameObject.SetActive(true);
         gameStarted = true;
         timerManager.ResumeTimer(); // Resume the timer when the game starts
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.PlayMusic();
+        }
     }
 
     void Update()
@@ -83,6 +88,12 @@ public class BoxGameManager : MonoBehaviour
 
         // Pause the timer when the game is over
         timerManager.PauseTimer();
+
+        // Stop background music
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.StopMusic();
+        }
     }
 
     public void RestartGame()

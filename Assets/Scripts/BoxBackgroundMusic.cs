@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoxBackgroundMusic : MonoBehaviour
 {
-    private static FBBackgroundMusic backgroundMusic;
+    private static BoxBackgroundMusic backgroundMusic;
 
     private AudioSource audioSource; // Reference to the AudioSource component
 
