@@ -39,15 +39,17 @@ public class GameProgress : MonoBehaviour
     
     {
       
-        if (AuthManager.CurrentUser != null)
-        {
-            userID = AuthManager.CurrentUser.UserId;
-            Debug.Log("User ID obtained from user object: " + userID);
-        }
-        else
-        {
-            Debug.LogError("User object is null");
-        }
+           // if (AuthManager.CurrentUser != null)
+        // {
+        //     userID = AuthManager.CurrentUser.UserId;
+        //     Debug.Log("User ID obtained from user object: " + userID);
+        // }
+        // else
+        // {
+        //     Debug.LogError("User object is null");
+        // }
+
+        userID = "userid";
 
         gameID = "gameid"; //gameid same for all games, to get the data of all games
         yield return StartCoroutine(retrieveData.RetrieveGameData(userID, gameID));

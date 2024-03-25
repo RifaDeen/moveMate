@@ -169,16 +169,17 @@ public class dinoGameManager : MonoBehaviour
         isGameActive = false;
 
      
-        if (AuthManager.CurrentUser != null)
-        {
-            userID = AuthManager.CurrentUser.UserId;
-            Debug.Log("User ID obtained from user object: " + userID);
-        }
-        else
-        {
-            Debug.LogError("User object is null");
-        }
+        // if (AuthManager.CurrentUser != null)
+        // {
+        //     userID = AuthManager.CurrentUser.UserId;
+        //     Debug.Log("User ID obtained from user object: " + userID);
+        // }
+        // else
+        // {
+        //     Debug.LogError("User object is null");
+        // }
 
+        userID = "userid";
         gameID = "gameid";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
