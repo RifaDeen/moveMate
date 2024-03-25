@@ -4,7 +4,19 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/appDev/coronagamestrt.unity
+    guid: 48ba3c5a1d6284b4b84aa0c7a9bf38c6
+  - enabled: 1
+    path: Assets/Scenes/appDev/coronagame.unity
+    guid: 77b2d4fa154974958a31b001b40ee6b1
+  - enabled: 1
+    path: Assets/MediaPipeUnity/Samples/Scenes/coronaHandTracking/CoronaHandTracking.unity
+    guid: 2a8ffbb84dc53486b99c301db172147f
+  - enabled: 1
+    path: Assets/Scenes/appDev/gamePage.unity
+    guid: 0ee660b92560b4fa38ea30b3ce630ee7
   m_configObjects:
     com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: c28d4e2ffc9c3a24fae589ef0a8a061e, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 5423f2d1fa1b348bb8bc8a051bbf7cce, type: 2}
