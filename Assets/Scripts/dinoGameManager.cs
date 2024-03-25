@@ -12,15 +12,16 @@ public class dinoGameManager : MonoBehaviour
 
     public float initialGameSpeed = 5f;
     public float gameSpeedIncrease = 0.1f;
-    public float gameSpeed { 
-        get; 
-        private set; 
+    public float gameSpeed
+    {
+        get;
+        private set;
     }
 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI hiscoreText;
     [SerializeField] private TextMeshProUGUI gameOverText;
-    [SerializeField] private Text timerText;    
+    [SerializeField] private Text timerText;
     [SerializeField] private TextMeshProUGUI getReadyText;
     [SerializeField] private Button retryButton;
     [SerializeField] private Button exitButton;
@@ -49,16 +50,20 @@ public class dinoGameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) {
+        if (Instance != null)
+        {
             DestroyImmediate(gameObject);
-        } else {
+        }
+        else
+        {
             Instance = this;
         }
     }
 
     private void OnDestroy()
     {
-        if (Instance == this) {
+        if (Instance == this)
+        {
             Instance = null;
         }
     }
@@ -85,7 +90,7 @@ public class dinoGameManager : MonoBehaviour
         score50Feedback.gameObject.SetActive(false);
         score75Feedback.gameObject.SetActive(false);
 
-         // Find the dinoBackgroundMusic object in the scene and get its component
+        // Find the dinoBackgroundMusic object in the scene and get its component
         backgroundMusic = FindObjectOfType<dinoBackgroundMusic>();
 
         // Play the background music when the game starts
@@ -94,16 +99,20 @@ public class dinoGameManager : MonoBehaviour
         // Stop the timer when the game is over
         dinoTimerManager.Instance.StopTimer();
 
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
             var dependencyStatus = task.Result;
-            if (dependencyStatus == Firebase.DependencyStatus.Available) {
-            // Create and hold a reference to your FirebaseApp,
-            // where app is a Firebase.FirebaseApp property of your application class.
-            app = Firebase.FirebaseApp.DefaultInstance;
-            Debug.Log("Firebase is ready to use!");
+            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                app = Firebase.FirebaseApp.DefaultInstance;
+                Debug.Log("Firebase is ready to use!");
 
-            // Set a flag here to indicate whether Firebase is ready to use by your app.
-            } else {
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+            }
+            else
+            {
                 UnityEngine.Debug.LogError(System.String.Format(
                 "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
                 // Firebase Unity SDK is not safe to use here.
@@ -115,7 +124,8 @@ public class dinoGameManager : MonoBehaviour
     {
         dinoObstacle[] obstacles = FindObjectsOfType<dinoObstacle>();
 
-        foreach (var obstacle in obstacles) {
+        foreach (var obstacle in obstacles)
+        {
             Destroy(obstacle.gameObject);
         }
 
@@ -168,7 +178,7 @@ public class dinoGameManager : MonoBehaviour
         // Disable player control
         isGameActive = false;
 
-     
+
         // if (AuthManager.CurrentUser != null)
         // {
         //     userID = AuthManager.CurrentUser.UserId;
@@ -185,7 +195,7 @@ public class dinoGameManager : MonoBehaviour
         gameInstanceId = gameUtils.GenerateGameInstanceId();
         int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = dinoTimerManager.Instance.GetElapsedTime();
-        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime, 2));
     }
 
     public void Retry()
@@ -278,12 +288,16 @@ public class dinoGameManager : MonoBehaviour
         hiscoreText.text = Mathf.FloorToInt(hiscore).ToString("D3");
     }
 
-     public void OnExitButtonClick()
-        {
-            // Load another scene before quitting
-            SceneManager.LoadScene("gamePage");
+ public void OnExitButtonClick()
+{
+    // Load another scene before quitting
+    SceneManager.LoadScene("gamePage");
 
-            // Quit the game
-            Application.Quit();
-        }
+    // Quit the game
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #else
+        Application.Quit();
+    #endif
+}
 }
