@@ -1,18 +1,42 @@
-name: Acquire activation file
-on:
-  workflow_dispatch: {}
+name: Unity CI
+
+on: [push, pull_request]
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
 jobs:
-  activation:
-    name: Request manual activation file 🔑
+  build:
     runs-on: ubuntu-latest
     steps:
-      # Request manual activation file
-      - name: Request manual activation file
-        id: getManualLicenseFile
-        uses: game-ci/unity-request-activation-file@v2
-      # Upload artifact (Unity_v20XX.X.XXXX.alf)
-      - name: Expose as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ steps.getManualLicenseFile.outputs.filePath }}
-          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Unity
+      uses: game-ci/unity-setup@v2
+      with:
+        unity-version: '2022.3.20f1' # replace with your Unity version
+
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: Library
+        key: Library
+
+    - name: Activate Unity
+      uses: game-ci/unity-activate@v2
+      with:
+        personal: true
+
+    - name: Build
+      uses: game-ci/unity-build@v2
+      with:
+        targetPlatform: Android # specify Android as the target platform
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Build
+        path: build
