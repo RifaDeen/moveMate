@@ -15,28 +15,40 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Setup Unity
-      uses: game-ci/unity-setup@v2
+      uses: webbertakken/unity-builder@0.13
       with:
-        unity-version: '2022.3.20f1' # replace with your Unity version
-
-    - name: Cache
-      uses: actions/cache@v2
-      with:
-        path: Library
-        key: Library
+        unityVersion: '2022.3.20f1' 
 
     - name: Activate Unity
-      uses: game-ci/unity-activate@v2
-      with:
-        personal: true
+      run: |
+        echo "Activating Unity..."
+        /opt/unity/Editor/Unity \
+          -batchmode \
+          -nographics \
+          -logFile /dev/stdout \
+          -quit \
+          -username ${{ env.UNITY_EMAIL }} \
+          -password ${{ env.UNITY_PASSWORD }} \
+          -serial ${{ env.UNITY_LICENSE }}
 
     - name: Build
-      uses: game-ci/unity-build@v2
-      with:
-        targetPlatform: Android # specify Android as the target platform
+      run: |
+        echo "Building project..."
+        /opt/unity/Editor/Unity \
+          -batchmode \
+          -nographics \
+          -logFile /dev/stdout \
+          -projectPath . \
+          -quit \
+          -buildTarget Android \
+          -executeMethod BuildCommand.PerformBuild \
+          -customBuildName mygame.apk \
+          -customBuildPath ./Builds \
+          -customBuildTarget Android \
+          -buildVersion 0.1
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: Build
-        path: build
+        path: Builds/mygame.apk
