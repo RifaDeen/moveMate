@@ -288,16 +288,12 @@ public class dinoGameManager : MonoBehaviour
         hiscoreText.text = Mathf.FloorToInt(hiscore).ToString("D3");
     }
 
- public void OnExitButtonClick()
-{
-    // Load another scene before quitting
-    SceneManager.LoadScene("gamePage");
+    public void OnExitButtonClick()
+    {
+        // Load another scene before quitting
+        SceneManager.LoadScene("gamePage");
 
-    // Quit the game
-    #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-    #else
-        Application.Quit();
-    #endif
-}
+        // Quit the game
+        Application.Quit();    
+    }
 }
