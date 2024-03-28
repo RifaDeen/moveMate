@@ -54,8 +54,34 @@ public class FBGameManager : MonoBehaviour
         }
     }
 
+    // void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // {
+    //     // If the loaded scene is gamePage, reset the game
+    //     if (scene.name == "gamePage")
+    //     {
+    //         ResetGame();
+    //     }
+    // }
+
+    // public void ResetGame()
+    // {
+    //     playButton.SetActive(true);
+    //     getReadyImage.SetActive(true);
+    //     gameOverImage.SetActive(false);
+    //     exitImage.gameObject.SetActive(true);
+    //     scoreText.gameObject.SetActive(true);
+
+    //     FBTimerManager timerManager = GameObject.FindObjectOfType<FBTimerManager>();
+    //     if (timerManager != null)
+    //     {
+    //         timerManager.EnableTimerText();
+    //     }
+
+    // }
+
     private void Start()
     {
+       // SceneManager.sceneLoaded += OnSceneLoaded;
         getReadyImage.SetActive(true);
         playButton.SetActive(true);
         gameOverImage.SetActive(false);
@@ -149,17 +175,17 @@ public class FBGameManager : MonoBehaviour
         }
 
 
-        // if (AuthManager.CurrentUser != null)
-        // {
-        //     userID = AuthManager.CurrentUser.UserId;
-        //     Debug.Log("User ID obtained from user object: " + userID);
-        // }
-        // else
-        // {
-        //     Debug.LogError("User object is null");
-        // }
+        if (AuthManager.CurrentUser != null)
+        {
+            userID = AuthManager.CurrentUser.UserId;
+            Debug.Log("User ID obtained from user object: " + userID);
+        }
+        else
+        {
+             userID = "userid";
+            Debug.LogError("User object is null");
+        }
 
-        userID = "userid";
         gameID = "gameid";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
@@ -173,6 +199,11 @@ public class FBGameManager : MonoBehaviour
         Time.timeScale = 0f;
         player.enabled = false;
     }
+
+    // void OnDestroy()
+    // {
+    //     SceneManager.sceneLoaded -= OnSceneLoaded;
+    // }
 
     public void IncreaseScore()
     {
@@ -261,27 +292,13 @@ public class FBGameManager : MonoBehaviour
 
     public void OnExitButtonClick()
     {
-        // Load another scene before quitting
-        SceneManager.LoadScene("gamePage");
+
 
         // Quit the game
         Application.Quit();
 
-        playButton.SetActive(false);
-        getReadyImage.SetActive(false);
-        gameOverImage.SetActive(false);
-        exitImage.gameObject.SetActive(false);
-        scoreText.gameObject.SetActive(false);
 
-        FBTimerManager timerManager = GameObject.FindObjectOfType<FBTimerManager>();
-        if (timerManager != null)
-        {
-            timerManager.DisableTimerText();
-        }
-        if (backgroundMusic != null)
-        {
-            backgroundMusic.StopMusic();
-        }
-
+        // Load another scene before quitting
+        SceneManager.LoadScene("gamePage");
     }
 }

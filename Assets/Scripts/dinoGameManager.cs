@@ -68,6 +68,8 @@ public class dinoGameManager : MonoBehaviour
         }
     }
 
+    
+
     private void Start()
     {
         player = FindObjectOfType<DinoPlayer>();
@@ -179,17 +181,18 @@ public class dinoGameManager : MonoBehaviour
         isGameActive = false;
 
 
-        // if (AuthManager.CurrentUser != null)
-        // {
-        //     userID = AuthManager.CurrentUser.UserId;
-        //     Debug.Log("User ID obtained from user object: " + userID);
-        // }
-        // else
-        // {
-        //     Debug.LogError("User object is null");
-        // }
+        if (AuthManager.CurrentUser != null)
+        {
+            userID = AuthManager.CurrentUser.UserId;
+            Debug.Log("User ID obtained from user object: " + userID);
+        }
+        else
+        {
 
-        userID = "userid";
+            userID = "userid";
+            Debug.LogError("User object is null");
+        }
+
         gameID = "gameid";
         GameUtils gameUtils = new GameUtils();
         gameInstanceId = gameUtils.GenerateGameInstanceId();
@@ -290,24 +293,12 @@ public class dinoGameManager : MonoBehaviour
 
     public void OnExitButtonClick()
     {
-        // Load another scene before quitting
-        SceneManager.LoadScene("gamePage");
 
-        // Quit the game
+
+           // Quit the game
         Application.Quit();
 
-        player.gameObject.SetActive(false);
-        spawner.gameObject.SetActive(false);
-        gameOverText.gameObject.SetActive(false);
-        retryButton.gameObject.SetActive(false);
-        exitButton.gameObject.SetActive(false);
-        getReadyText.gameObject.SetActive(false);
-        scoreText.gameObject.SetActive(false);
-        hiscoreText.gameObject.SetActive(false);
-        timerText.gameObject.SetActive(false);
-        dinoTimerManager.Instance.StopTimer();
-
-        // Stop the background music when the game is over
-        backgroundMusic.StopMusic();
+             // Load another scene before quitting
+        SceneManager.LoadScene("gamePage");
     }
 }

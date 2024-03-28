@@ -34,17 +34,17 @@ private void AddScore(int score, List<int> scoreList)
 }
     private IEnumerator RetrieveAndShowGraphAsync()     {
       
-        // if (AuthManager.CurrentUser != null)
-        // {
-        //     userID = AuthManager.CurrentUser.UserId;
-        //     Debug.Log("User ID obtained from user object: " + userID);
-        // }
-        // else
-        // {
-        //     Debug.LogError("User object is null");
-        // }
+        if (AuthManager.CurrentUser != null)
+        {
+            userID = AuthManager.CurrentUser.UserId;
+            Debug.Log("User ID obtained from user object: " + userID);
+        }
+        else
+        {
 
-        userID = "userid";
+            userID = "userid";
+            Debug.LogError("User object is null");
+        }
         
          RetrieveData retrieveData = new RetrieveData();
          yield return retrieveData.RetrieveGameData(userID, "gameid"); // Fix: Change the return type of RetrieveGameDataFromFirestore to IEnumerator

@@ -6,13 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class ExitCorona : MonoBehaviour
 {
-public void ExitCoronaMethod(string sceneName)
-{
-    SceneManager.LoadScene(sceneName);
-    #if UNITY_EDITOR
+    public void ExitCoronaMethod(string sceneName)
+    {
+        //   if (CoronaScoreManager.backgroundMusic != null)
+        // {
+        //     CoronaScoreManager.backgroundMusic.StopMusic();
+        // }
+
+        SceneManager.LoadScene(sceneName);
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-    #else
+#else
         Application.Quit();
-    #endif
-}
+#endif
+
+
+    }
 }

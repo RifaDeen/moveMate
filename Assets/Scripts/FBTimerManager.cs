@@ -40,9 +40,20 @@ public class FBTimerManager : MonoBehaviour
         return elapsedTime;
     }
 
+    public void EnableTimerText()
+    {
+        if (timerText != null)
+        {
+            timerText.enabled = true;
+        }
+    }
+
     public void DisableTimerText()
     {
-        timerText.enabled = false;
+        if (timerText != null)
+        {
+            timerText.enabled = false;
+        }
     }
 
     void OnApplicationQuit()
