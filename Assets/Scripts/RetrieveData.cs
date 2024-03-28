@@ -9,7 +9,7 @@ using UnityEngine;
 public class RetrieveData
 {
 
-    //stroring dictionary in a dictionary -  { "flappy_bird" : [(score, time)], "dino_game" : [(score, time)]}
+    //stroring dictionary in a dictionary -  { "flappy_bird" : [(score, time), (score, time), (score, time), (score, time)], "dino_game" : [(score, time)]}
     Dictionary<string, List<(int score, float time)>> gameDataDictionary = new Dictionary<string, List<(int score, float time)>>();
 
     // // public async void RetrieveGameDataFromFirestore(string userId, string gameId)
@@ -78,6 +78,9 @@ public class RetrieveData
         foreach (DocumentSnapshot document in task.Result.Documents)
         {
             Dictionary<string, object> gameData = document.ToDictionary();
+             /* checks if the dictionary contains keys "score" and "Time" 
+    //             If both keys are found, it retrieves their corresponding values 
+    //             and assigns them to variables score and time respectively */
 
             if (gameData.TryGetValue("score", out object scoreObj) && gameData.TryGetValue("Time", out object timeObj))
             {

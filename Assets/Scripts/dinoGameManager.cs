@@ -294,6 +294,20 @@ public class dinoGameManager : MonoBehaviour
         SceneManager.LoadScene("gamePage");
 
         // Quit the game
-        Application.Quit();    
+        Application.Quit();
+
+        player.gameObject.SetActive(false);
+        spawner.gameObject.SetActive(false);
+        gameOverText.gameObject.SetActive(false);
+        retryButton.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
+        getReadyText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
+        hiscoreText.gameObject.SetActive(false);
+        timerText.gameObject.SetActive(false);
+        dinoTimerManager.Instance.StopTimer();
+
+        // Stop the background music when the game is over
+        backgroundMusic.StopMusic();
     }
 }

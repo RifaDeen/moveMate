@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +38,16 @@ public class FBTimerManager : MonoBehaviour
     public float GetElapsedTime()
     {
         return elapsedTime;
+    }
+
+    public void DisableTimerText()
+    {
+        timerText.enabled = false;
+    }
+
+    void OnApplicationQuit()
+    {
+        DisableTimerText();
     }
 
 

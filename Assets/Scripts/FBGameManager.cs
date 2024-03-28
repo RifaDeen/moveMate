@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class FBGameManager : MonoBehaviour
 {
-    public static   FBGameManager Instance { get; private set; }
+    public static FBGameManager Instance { get; private set; }
     [SerializeField] private FBPlayer player;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text startoffFeedback;
@@ -23,7 +23,7 @@ public class FBGameManager : MonoBehaviour
     [SerializeField] private GameObject gameOverImage; // Reference to the "Game Over" image
     [SerializeField] private Button exitImage; // Reference to the "Game Over" image
 
-    private FBBackgroundMusic backgroundMusic; 
+    private FBBackgroundMusic backgroundMusic;
 
     private int score;
     public int Score => score;
@@ -68,28 +68,32 @@ public class FBGameManager : MonoBehaviour
         score30Feedback.gameObject.SetActive(false);
         score50Feedback.gameObject.SetActive(false);
 
-         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
-        var dependencyStatus = task.Result;
-        if (dependencyStatus == Firebase.DependencyStatus.Available) {
-        // Create and hold a reference to your FirebaseApp,
-        // where app is a Firebase.FirebaseApp property of your application class.
-            app = Firebase.FirebaseApp.DefaultInstance;
-            Debug.Log("Firebase is ready to use!");
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            var dependencyStatus = task.Result;
+            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                app = Firebase.FirebaseApp.DefaultInstance;
+                Debug.Log("Firebase is ready to use!");
 
-        // Set a flag here to indicate whether Firebase is ready to use by your app.
-        } else {
-             UnityEngine.Debug.LogError(System.String.Format(
-             "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-            // Firebase Unity SDK is not safe to use here.
-        }
-    });
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+            }
+            else
+            {
+                UnityEngine.Debug.LogError(System.String.Format(
+                "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                // Firebase Unity SDK is not safe to use here.
+            }
+        });
     }
 
     public void Play()
     {
         score = 0;
         scoreText.text = score.ToString();
-        isGetReady = false; 
+        isGetReady = false;
         playButton.SetActive(false);
         gameOverImage.SetActive(false); // Hide "Game Over" image
         getReadyImage.SetActive(false); // Hide "Get Ready" image
@@ -161,7 +165,7 @@ public class FBGameManager : MonoBehaviour
         gameInstanceId = gameUtils.GenerateGameInstanceId();
         int scoreInt = (int)score; // Cast the score from float to int
         float gameTime = FBTimerManager.Instance.GetElapsedTime();
-        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime,2));
+        gameUtils.SaveGameDataToFirestore(userID, gameID, gameInstanceId, scoreInt, (float)Math.Round(gameTime, 2));
     }
 
     public void Pause()
@@ -181,7 +185,7 @@ public class FBGameManager : MonoBehaviour
         }
 
         // Check if the game is not in "Get Ready" state and the score is 1
-        if (!isGetReady && score == 1 | score ==2)
+        if (!isGetReady && score == 1 | score == 2)
         {
             StartCoroutine(DisplayScore1Feedback());
         }
@@ -256,11 +260,28 @@ public class FBGameManager : MonoBehaviour
     }
 
     public void OnExitButtonClick()
-        {
-            // Load another scene before quitting
-            SceneManager.LoadScene("gamePage");
+    {
+        // Load another scene before quitting
+        SceneManager.LoadScene("gamePage");
 
-            // Quit the game
-            Application.Quit();
+        // Quit the game
+        Application.Quit();
+
+        playButton.SetActive(false);
+        getReadyImage.SetActive(false);
+        gameOverImage.SetActive(false);
+        exitImage.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
+
+        FBTimerManager timerManager = GameObject.FindObjectOfType<FBTimerManager>();
+        if (timerManager != null)
+        {
+            timerManager.DisableTimerText();
         }
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.StopMusic();
+        }
+
+    }
 }
